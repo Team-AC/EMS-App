@@ -32,7 +32,7 @@ export default class graph extends React.Component {
     render() {
       return (
         <div style={{height: "50vh", width: "90vw"}}>
-          <div style={{"margin-top": "70px"}}>Power Consumed by a MURB over a day</div>
+          <div style={{"margin-top": "70px"}}>Power Consumed by a MURB</div>
           <ResponsiveLine
             data={this.state.graphArray}
             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
