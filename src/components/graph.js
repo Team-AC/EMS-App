@@ -32,15 +32,13 @@ export default class graph extends React.Component {
     render() {
       return (
         <div style={{height: "50vh", width: "90vw"}}>
-          <div style={{"margin-top": "70px"}}>Power Consumed by a MURB</div>
+          <div style={{"marginTop": "70px"}}>Power Consumed by a MURB</div>
           <ResponsiveLine
             data={this.state.graphArray}
             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
             xScale={{ type: 'point' }}
-            yScale={{ type: 'linear', min: '0', max: '75', stacked: true, reverse: false }}
+            yScale={{ type: 'linear', min: '0', max: '75', reverse: false }}
             yFormat=" >-.2f"
-            axisTop={null}
-            axisRight={null}
             axisBottom={{
                 orient: 'bottom',
                 tickSize: 5,
@@ -66,7 +64,7 @@ export default class graph extends React.Component {
             pointBorderWidth={2}
             pointBorderColor={{ from: 'serieColor' }}
             pointLabelYOffset={-12}
-            useMesh={true}
+            enableSlices={'x'}
           />
         </div>
       )
