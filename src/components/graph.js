@@ -29,6 +29,7 @@ export default class graph extends React.Component {
     }
 
     render() {
+      
       return (
         <div style={{height: "50vh", width: "90vw"}}>
           <div style={{"marginTop": "70px"}}>Power Consumed by a MURB</div>
@@ -41,17 +42,15 @@ export default class graph extends React.Component {
             axisBottom={{
                 orient: 'bottom',
                 tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
+                tickPadding: 15,
                 legend: 'Time (HH:MM)',
                 legendOffset: 36,
-                legendPosition: 'middle'
+                legendPosition: 'middle',
             }}
             axisLeft={{
                 orient: 'left',
                 tickSize: 5,
                 tickPadding: 5,
-                tickRotation: 0,
                 legend: 'Power (kW)',
                 legendOffset: -40,
                 legendPosition: 'middle'
