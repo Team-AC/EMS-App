@@ -17,14 +17,13 @@ export default class graph extends React.Component {
     componentDidMount() {
       axios.get('http://localhost:3000/api/murb')
       .then((res) => {
-        this.setState((state, props) => {
-          res.data.forEach((el, index)  => {
-            state.graphArray[0].data[index] = {
-              x: el.TimeStamp,
-              y: el.Power
-            };
-          });
-          
+        this.setState(() => {
+          return {
+            graphArray: [{
+              id: 'murb-power',
+              data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
+            }]
+          }
         });
       });
     }
