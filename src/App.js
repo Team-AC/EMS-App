@@ -1,21 +1,11 @@
 import React from 'react';
-
-import Graph from './components/graph'
 import './App.css';
+import Home from './components/Home';
 
-export default class App extends React.Component {
+const App = () => (
+  <div className="App">
+    <Home/>
+  </div>
+);
 
-  constructor(props) {
-    super(props);
-    this.state = {data: []}
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <Graph/>
-      </div>
-    );
-  }
-
-}
+export default App;
