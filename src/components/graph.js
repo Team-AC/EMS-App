@@ -2,39 +2,16 @@ import { ResponsiveLine } from '@nivo/line'
 import React from 'react';
 import axios from 'axios';
 
-export default class graph extends React.Component {
-
-    constructor(props) {
-      super(props);
-      this.state = {
-        graphArray: [{
-          id: 'murb-power',
-          data: []
-        }]
-      }
-    }
-
-    componentDidMount() {
-      axios.get('http://localhost:3000/api/murb')
-      .then((res) => {
-        this.setState(() => {
-          return {
-            graphArray: [{
-              id: 'murb-power',
-              data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
-            }]
-          }
-        });
-      });
-    }
-
+export default class Graph extends React.Component {
     render() {
-      
       return (
         <div style={{height: "50vh", width: "90vw"}}>
           <div style={{"marginTop": "70px"}}>Power Consumed by a MURB</div>
           <ResponsiveLine
-            data={this.state.graphArray}
+            data={[{
+              id: 'murb-power',
+              data: this.props.data
+            }]}
             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
             xScale={{ type: 'point' }}
             yScale={{ type: 'linear', min: '0', max: '75', reverse: false }}

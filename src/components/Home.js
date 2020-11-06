@@ -10,19 +10,46 @@ export default class Home extends React.Component {
     super(props);
     this.state = {
       startDate: new Date(),
-      endDate: new Date()
+      endDate: new Date(),
+      data: []
     };
   }
 
-  onChange(date) {
-    console.log(date);
+  onChangeStartDate(startDate) {
+    this.setState(() => ({
+      startDate
+    }), this.sendRequest);
+  }
+
+  onChangeEndDate(endDate) {
+    this.setState(() => ({
+      endDate
+    }), this.sendRequest);
+  }
+
+  sendRequest() {
+    axios.get('http://localhost:3000/api/murb', {
+      params: {
+        startDate: this.state.startDate,
+        endDate: this.state.endDate
+      }
+    })
+    .then((res) => {
+      this.setState(() => ({
+        data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
+      }))
+    });
   }
 
   render() {
     return (
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Graph/>
+          <Graph
+            startDate={this.state.startDate}
+            endDate={this.state.endDate}
+            data={this.state.data}
+          />
         </Grid>
 
         <Grid item xs={2}>
@@ -31,7 +58,7 @@ export default class Home extends React.Component {
               label="Start Date"
               inputVariant="outlined"
               value={this.state.startDate}
-              onChange={this.onChange}
+              onChange={(date) => this.onChangeStartDate(date)}
             />
           </MuiPickersUtilsProvider>
         </Grid>
@@ -42,7 +69,7 @@ export default class Home extends React.Component {
               label="End Date"
               inputVariant="outlined"
               value={this.state.endDate}
-              onChange={this.onChange}
+              onChange={(date) => this.onChangeEndDate(date)}
             />
           </MuiPickersUtilsProvider>
         </Grid>
