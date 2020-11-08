@@ -28,7 +28,7 @@ export default class Home extends React.Component {
   }
 
   sendRequest() {
-    axios.get('http://localhost:3000/api/murb', {
+    axios.get('/api/murb', {
       params: {
         startDate: this.state.startDate,
         endDate: this.state.endDate
