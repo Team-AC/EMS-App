@@ -32,6 +32,7 @@ const Graph = (props) => (
           legendPosition: 'middle'
       }}
       colors={{"scheme":"category10"}}
+      curve={"natural"}
       enableArea={true}
       pointSize={10}
       pointColor={{ theme: 'background' }}

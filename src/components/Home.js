@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Grid } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
-import { parseISO } from 'date-fns';
+import { formatISO, parseISO, subMinutes } from 'date-fns';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -14,17 +14,22 @@ export default class Home extends React.Component {
       startDate: new Date(),
       endDate: new Date(),
       data: [],
-      tickValues: []
+      tickValues: [],
+      liveIntervalId: 0,
     };
+
+    this.liveClick = this.liveClick.bind(this);
   }
 
   onChangeStartDate(startDate) {
+    this.stopLive();
     this.setState(() => ({
       startDate
     }), this.sendRequest);
   }
 
   onChangeEndDate(endDate) {
+    this.stopLive();
     this.setState(() => ({
       endDate
     }), this.sendRequest);
@@ -53,6 +58,30 @@ export default class Home extends React.Component {
     return tickValues;
   }
 
+  pastDay() {
+    this.stopLive();
+    console.log("test")
+  }
+
+  liveClick() {
+    const liveIntervalId = setInterval(() => {
+      const endDate = formatISO(new Date());
+      const startDate = formatISO(subMinutes(new Date(), 5));
+      this.setState(() => ({
+        startDate,
+        endDate
+      }), this.sendRequest)
+    }, 3000);
+
+    this.setState(() => ({
+      liveIntervalId,
+    }))
+  }
+
+  stopLive() {
+    clearInterval(this.state.liveIntervalId);
+  }
+
   render() {
     return (
       <Grid container direction="column" spacing={6}>
@@ -71,8 +100,8 @@ export default class Home extends React.Component {
             <Button>Past 3 Months</Button>
             <Button>Past Month</Button>
             <Button>Past Week</Button>
-            <Button>Past Day</Button>
-            <Button startIcon={<DynamicFeedIcon/>}>Live</Button>
+            <Button onClick={this.pastDayClick}>Past Day</Button>
+            <Button startIcon={<DynamicFeedIcon/>} onClick={this.liveClick}>Live</Button>
           </ButtonGroup>
         </Grid>
 
