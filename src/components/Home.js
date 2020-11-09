@@ -19,6 +19,7 @@ export default class Home extends React.Component {
     };
 
     this.liveClick = this.liveClick.bind(this);
+    this.pastDayClick = this.pastDayClick.bind(this);
   }
 
   onChangeStartDate(startDate) {
@@ -50,6 +51,16 @@ export default class Home extends React.Component {
     });
   }
 
+  sendRequestPastDay() {
+    axios.get('/api/murb/pastDay')
+    .then((res) => {
+      this.setState(() => ({
+        tickValues: this.generateTickValues(res.data.map(data => data.TimeStamp)),
+        data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
+      }))
+    });
+  }
+
   generateTickValues(timestamps) {
     const tickValues = [];
     timestamps.forEach((timestamp, index) => {
@@ -58,9 +69,9 @@ export default class Home extends React.Component {
     return tickValues;
   }
 
-  pastDay() {
+  pastDayClick() {
     this.stopLive();
-    console.log("test")
+    this.sendRequestPastDay();
   }
 
   liveClick() {
