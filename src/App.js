@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core';
 import React from 'react';
 import './App.css';
 import Home from './components/Home';
+import Footer from './components/Footer';
 import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
 
@@ -12,6 +13,7 @@ export default () => (
       <Grid item>
         <Header/>
       </Grid>
+      
       <Grid item>
         <Grid container direction="row">
           <Grid item xs={2}>

@@ -1,5 +1,5 @@
-import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { BatteryChargingFull, Business, EvStation, Inbox } from '@material-ui/icons';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Link } from '@material-ui/core';
+import { BatteryChargingFull, Business, EvStation, Inbox, Info } from '@material-ui/icons';
 
 export default () => (
   <Drawer width={2} variant="permanent">
@@ -22,6 +22,12 @@ export default () => (
           <BatteryChargingFull/>
         </ListItemIcon>
         <ListItemText primary="Energy Data for BESS"/>
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon>
+          <Info/>
+        </ListItemIcon>
+        <ListItemText primary="About"/>
       </ListItem>
     </List>
   </Drawer>
