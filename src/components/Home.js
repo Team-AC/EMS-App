@@ -115,30 +115,31 @@ export default class Home extends React.Component {
             />
           </Grid>
           
-          <Grid item xs={5}>
-            <ButtonGroup color="primary" aria-label="outlined primary button group">
-              <Button>Past Year</Button>
-              <Button>Past 3 Months</Button>
-              <Button>Past Month</Button>
-              <Button>Past Week</Button>
-              <Button onClick={this.pastDayClick}>Past Day</Button>
-              <Button startIcon={<DynamicFeedIcon/>} onClick={this.liveClick}>Live</Button>
-            </ButtonGroup>
+          <Grid container direction = "row" spacing = {3}>
+            <Grid item xs = {5} style ={{marginLeft: "60px"}}>
+              <ButtonGroup color="primary" aria-label="outlined primary button group">
+                <Button>Past Year</Button>
+                <Button>Past 3 Months</Button>
+                <Button>Past Month</Button>
+                <Button>Past Week</Button>
+                <Button onClick={this.pastDayClick}>Past Day</Button>
+                <Button startIcon={<DynamicFeedIcon/>} onClick={this.liveClick}>Live</Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid item xs = {5}>
+              <Card style = {{marginLeft: "300px"}}>
+                <CardContent>
+                  <Typography color="textSecondary" gutterBottom>
+                    On Peak Hours = {this.state.peakHours}
+                    <br/>
+                    Off Peak Hours = {this.state.offPeakHours}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
 
-          <Grid item xs={3}>
-            <Card style={{"margin-left": "20px"}}>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  On Peak Hours = {this.state.peakHours}
-                  <br/>
-                  Off Peak Hours = {this.state.offPeakHours}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid container direction="row" spacing={3}>
+          <Grid container direction="row" spacing={3} style = {{marginLeft: "30px"}}>
             <Grid item xs={2}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
