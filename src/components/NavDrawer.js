@@ -1,11 +1,14 @@
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Link } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { BatteryChargingFull, Business, EvStation, Inbox, Info } from '@material-ui/icons';
+import {Link} from "react-router-dom";
+import About from '../About';
+
 
 export default () => (
   <Drawer width={2} variant="permanent">
     <br/><br/><br/>
     <List>
-      <ListItem button>
+      <ListItem button component = {Link} to ="/Home">
         <ListItemIcon>
           <Business/>
         </ListItemIcon>
@@ -23,11 +26,11 @@ export default () => (
         </ListItemIcon>
         <ListItemText primary="Energy Data for BESS"/>
       </ListItem>
-      <ListItem button>
+      <ListItem button component ={Link} to="/About">
         <ListItemIcon>
           <Info/>
         </ListItemIcon>
-        <ListItemText primary="About"/>
+        <ListItemText primary="About"/> 
       </ListItem>
     </List>
   </Drawer>
