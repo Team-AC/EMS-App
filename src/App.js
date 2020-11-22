@@ -1,13 +1,13 @@
-
 import { Grid } from '@material-ui/core';
 import React from 'react';
 import './App.css';
 import Home from './components/Home';
-import Footer from './components/Footer';
 import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import About from './About';
+import Simulation from './components/Simulation';
+
 
 export default () => (
   <div className="App">
@@ -24,10 +24,9 @@ export default () => (
             </Grid>
             <Grid item xs={10}>
               <Switch>
-                <Route exact path = "/Home">
-                  <Home/>
-                </Route>
-                <Route path = "/About" component={About}/>
+                <Route path="/Home" component={Home}></Route>
+                <Route path="/Simulation" component={Simulation}/>
+                <Route path="/About" component={About}/>
               </Switch>
             </Grid>
           </Router>

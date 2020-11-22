@@ -1,7 +1,6 @@
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { BatteryChargingFull, Business, EvStation, Inbox, Info } from '@material-ui/icons';
+import { BatteryChargingFull, Business, EvStation, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
 import {Link} from "react-router-dom";
-import About from '../About';
 
 
 export default () => (
@@ -26,12 +25,18 @@ export default () => (
         </ListItemIcon>
         <ListItemText primary="Energy Data for BESS"/>
       </ListItem>
+      <ListItem button component={Link} to="/Simulation">
+        <ListItemIcon>
+          <TouchAppOutlined/>
+        </ListItemIcon>
+        <ListItemText primary ="Simulation"/>
+      </ListItem>
       <ListItem button component ={Link} to="/About">
         <ListItemIcon>
           <Info/>
         </ListItemIcon>
         <ListItemText primary="About"/> 
-      </ListItem>
+      </ListItem>   
     </List>
   </Drawer>
 )
