@@ -92,7 +92,7 @@ export default class Home extends React.Component {
         startDate,
         endDate
       }), this.sendRequest)
-    }, 3000);
+    }, 300000);
 
     this.setState(() => ({
       liveIntervalId,
