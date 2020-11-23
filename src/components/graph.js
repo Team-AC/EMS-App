@@ -50,18 +50,8 @@ const Graph = (props) => (
                     border: '1px solid #ccc',
                 }}
             >
-                <div>Time: {slice.points[0].data.xFormatted}</div>
-                {slice.points.map(point => (
-                    <div
-                        key={point.id}
-                        style={{
-                            color: point.serieColor,
-                            padding: '3px 0',
-                        }}
-                    >
-                        <strong>{point.serieId}</strong> [{point.data.yFormatted}]
-                    </div>
-                ))}
+                <div>Time: {slice.points[0].data.xFormatted.split("T")[1].split(".")[0]}</div>
+                <div>MURB-power: {slice.points[0].data.yFormatted}</div>
             </div>
         )
     }}
