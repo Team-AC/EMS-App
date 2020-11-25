@@ -5,9 +5,9 @@ import Home from './components/Home';
 import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import About from './About';
+import About from './components/About';
 import Simulation from './components/Simulation';
-
+import Snackbar from './components/Snackbar';
 
 export default () => (
   <div className="App">

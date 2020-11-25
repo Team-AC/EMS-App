@@ -1,18 +1,23 @@
-import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-import { Button } from '@material-ui/core';
+import React, {useEffect} from 'react';
+import {
+  Snackbar,
+  SnackbarContent,
+  IconButton,
+  CheckCircleIcon,
+  CloseIcon,
+  ErrorIcon,
+  InfoWrapper
+} from "./SnackbarStyle";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-export default () => {
+export default ({status, msg}) => {
   const [open, setOpen] = React.useState(false)
-
-  const handClick = () => {
-    setOpen(true);
-  }
-
+  useEffect(
+    () => {
+      setOpen(true);
+    },
+    [status]
+  );
+  
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -22,11 +27,42 @@ export default () => {
 
   return (
     <div>
-      <Snackbar open={open} autohideDuration={5000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
-            Error 404! your brain is not found
-          </Alert>
-      </Snackbar>
+      <Snackbar
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left"
+      }}
+      open={open}
+      autoHideDuration={2000}
+      onClose={handleClose}
+    >
+      <SnackbarContent
+        status={status}
+        contentprops={{
+          "aria-describedby": "message-id"
+        }}
+        // prettier-ignore
+        message={(
+          <InfoWrapper id='message-id'>
+            {status === 'success' ?
+              <CheckCircleIcon /> :
+              <ErrorIcon />
+            }
+            {msg || `Form submission status: ${status}`}
+          </InfoWrapper>
+        )}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ]}
+      />
+    </Snackbar>
     </div>
   )
 }
