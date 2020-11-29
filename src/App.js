@@ -24,7 +24,7 @@ export default () => (
             </Grid>
             <Grid item xs={10}>
               <Switch>
-                <Route path="/Home" component={Home}></Route>
+                <Route exact path="/" component={Home}></Route>
                 <Route path="/Simulation" component={Simulation}/>
                 <Route path="/About" component={About}/>
               </Switch>

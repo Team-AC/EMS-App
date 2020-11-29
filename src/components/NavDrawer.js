@@ -7,7 +7,7 @@ export default () => (
   <Drawer width={2} variant="permanent">
     <br/><br/><br/>
     <List>
-      <ListItem button component = {Link} to ="/Home">
+      <ListItem button component = {Link} to ="/">
         <ListItemIcon>
           <Business/>
         </ListItemIcon>

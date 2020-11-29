@@ -19,10 +19,11 @@ export default class Home extends React.Component {
       liveIntervalId: 0,
       offPeakHours: '',
       peakHours: '',
+      currentInterval:'',
     };
-
-    this.liveClick = this.liveClick.bind(this);
-    this.pastDayClick = this.pastDayClick.bind(this);
+    this.pastWeek = this.pastWeek.bind(this);
+    this.pastDay = this.pastDay.bind(this);
+    
   }
 
   onChangeStartDate(startDate) {
@@ -39,23 +40,26 @@ export default class Home extends React.Component {
     }), this.sendRequest);
   }
 
-  sendRequest() {
-    axios.get('/api/murb', {
-      params: {
-        startDate: this.state.startDate,
-        endDate: this.state.endDate
-      }
-    })
+  
+  sendRequestPastDay() {
+    axios.get('/api/murb/pastDay')
     .then((res) => {
+      const {
+        aggregatedData,
+        peakHours,
+        offPeakHours
+      } = res.data;
       this.setState(() => ({
-        tickValues: this.generateTickValues(res.data.map(data => data.TimeStamp)),
-        data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
+        tickValues: this.generateTickValues(aggregatedData.map(data => data.TimeStamp)),
+        data: aggregatedData.map(data => ({x: data.TimeStamp, y: data.Power})),
+        peakHours,
+        offPeakHours
       }))
     });
   }
 
-  sendRequestPastDay() {
-    axios.get('/api/murb/pastDay')
+  sendCurrentRequest() {
+    axios.get('/api/murb/' + this.state.currentInterval)
     .then((res) => {
       const {
         aggregatedData,
@@ -79,30 +83,35 @@ export default class Home extends React.Component {
     return tickValues;
   }
 
-  pastDayClick() {
-    this.stopLive();
-    this.sendRequestPastDay();
+  // pastDayClick() {
+  //   this.stopLast();
+  //   this.sendRequestPastDay();
+  // }
+  
+  // stopLive() {
+  //   clearInterval(this.state.liveIntervalId);
+  // }
+
+  pastDay(){
+    this.changeInterval("pastDay")
   }
-
-  liveClick() {
-    const liveIntervalId = setInterval(() => {
-      const endDate = formatISO(new Date());
-      const startDate = formatISO(subMinutes(new Date(), 5));
-      this.setState(() => ({
-        startDate,
-        endDate
-      }), this.sendRequest)
-    }, 300000);
-
-    this.setState(() => ({
-      liveIntervalId,
-    }))
+  pastWeek(){
+    this.changeInterval("pastWeek")
   }
-
-  stopLive() {
-    clearInterval(this.state.liveIntervalId);
+  handleClick(){
+    this.sendCurrentRequest();
   }
-
+  changeInterval(interval){
+    this.stopLast();
+    this.setState({
+      currentInterval: interval
+    }, this.handleClick);
+   
+  }
+  stopLast() {
+    clearInterval(this.state.currentInterval);
+  }
+  
   render() {
     return (
         <Grid container direction="column" spacing={6}>
@@ -119,11 +128,11 @@ export default class Home extends React.Component {
             <Grid item xs = {5} style ={{marginLeft: "60px"}}>
               <ButtonGroup color="primary" aria-label="outlined primary button group">
                 <Button>Past Year</Button>
-                <Button>Past 3 Months</Button>
+                <Button disabled>Past 3 Months</Button>
                 <Button>Past Month</Button>
-                <Button>Past Week</Button>
-                <Button onClick={this.pastDayClick}>Past Day</Button>
-                <Button startIcon={<DynamicFeedIcon/>} onClick={this.liveClick}>Live</Button>
+                <Button onClick={this.pastWeek}>Past Week</Button>
+                <Button onClick={this.pastDay}>Past Day</Button>
+                <Button disabled startIcon={<DynamicFeedIcon/>} onClick={this.liveClick}>Live</Button>
               </ButtonGroup>
             </Grid>
             <Grid item xs = {5}>
@@ -168,3 +177,54 @@ export default class Home extends React.Component {
     )
   }
 }
+
+
+/*
+sendRequest() {
+    axios.get('/api/murb', {
+      params: {
+        startDate: this.state.startDate,
+        endDate: this.state.endDate
+      }
+    })
+    .then((res) => {
+      this.setState(() => ({
+        tickValues: this.generateTickValues(res.data.map(data => data.TimeStamp)),
+        data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
+      }))
+    });
+  }
+
+sendRequestPastDay() {
+    axios.get('/api/murb/pastDay')
+    .then((res) => {
+      const {
+        aggregatedData,
+        peakHours,
+        offPeakHours
+      } = res.data;
+      this.setState(() => ({
+        tickValues: this.generateTickValues(aggregatedData.map(data => data.TimeStamp)),
+        data: aggregatedData.map(data => ({x: data.TimeStamp, y: data.Power})),
+        peakHours,
+        offPeakHours
+      }))
+    });
+  }
+
+    liveClick() {
+    const liveIntervalId = setInterval(() => {
+      const endDate = formatISO(new Date());
+      const startDate = formatISO(subMinutes(new Date(), 5));
+      this.setState(() => ({
+        startDate,
+        endDate
+      }), this.sendRequest)
+    }, 300000);
+
+    this.setState(() => ({
+      liveIntervalId,
+    }))
+  }
+
+*/

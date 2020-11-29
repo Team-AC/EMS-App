@@ -3,7 +3,7 @@ import React from 'react';
 import axios from 'axios';
 
 const Graph = (props) => (
-  <div style={{height: "50vh", width: "90vw"}}>
+  <div style={{height: "50vh"}}>
     <div style={{"marginTop": "70px"}}>Power Consumed by a MURB</div>
     <ResponsiveLine
       data={[{
