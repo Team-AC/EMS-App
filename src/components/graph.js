@@ -50,7 +50,7 @@ const Graph = (props) => (
                     border: '1px solid #ccc',
                 }}
             >
-                <div>Time: {slice.points[0].data.xFormatted.split("T")[1].split(".")[0]}</div>
+                <div>Time: {slice.points[0].data.xFormatted}</div>
                 <div>MURB-power: {slice.points[0].data.yFormatted}</div>
             </div>
         )
