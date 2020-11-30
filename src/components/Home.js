@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, CardContent, Grid } from '@material-ui/core'
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
-import { format, formatISO, parseISO, subMinutes } from 'date-fns';
+import { compareAsc, format, formatISO, parse, parseISO, subMinutes } from 'date-fns';
 import Typography from '@material-ui/core/Typography';
 
 export default class Home extends React.Component {
@@ -38,6 +38,10 @@ export default class Home extends React.Component {
     }), this.sendRequest);
   }
 
+  sortData(data) {
+    return data.sort((dataLeft, dataRight) => compareAsc(parseISO(dataLeft.TimeStamp), parseISO(dataRight.TimeStamp)));
+  }
+
   formatData(data) {
     const formattedData = [];
     const formats = {
@@ -68,7 +72,10 @@ export default class Home extends React.Component {
           peakHours,
           offPeakHours
         } = res.data;
-        const formattedData = this.formatData(aggregatedData)
+        
+        const sortedData = this.sortData(aggregatedData)
+        const formattedData = this.formatData(sortedData);
+
         this.setState(() => ({
           tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
           data: formattedData.map(data => ({ x: data.TimeStamp, y: data.Power })),
