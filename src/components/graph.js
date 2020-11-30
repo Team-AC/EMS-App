@@ -12,7 +12,7 @@ const Graph = (props) => (
       }]}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
-      yScale={{ type: 'linear', min: '0', max: '75', reverse: false }}
+      yScale={{ type: 'linear', min: 0, max: 'auto', reverse: false }}
       yFormat=" >-.2f"
       axisBottom={{
           orient: 'bottom',
