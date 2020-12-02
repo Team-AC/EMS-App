@@ -38,7 +38,7 @@ export default () => {
 
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
+            <Container maxWidth="xl" className={classes.container}>
               <Switch>
                 <Route exact path="/" component={Home}></Route>
                 <Route path="/Simulation" component={Simulation}/>
