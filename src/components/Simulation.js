@@ -73,7 +73,7 @@ export default () => {
   };
 
   return (
-    <Grid container spacing={2} style={{ marginTop: "70px"}}>
+    <Grid container spacing={2}>
       <Grid item xs={4}>
         <Card>
           <CardContent>

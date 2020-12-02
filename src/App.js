@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(4),
     margin: 0,
   },
+  appBarSpacer: theme.mixins.toolbar,
 }));
 
 export default () => {
@@ -36,6 +37,7 @@ export default () => {
           <NavDrawer drawerWidth={drawerWidth}/>
 
           <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
               <Switch>
                 <Route exact path="/" component={Home}></Route>
