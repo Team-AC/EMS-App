@@ -25,19 +25,21 @@ export default function Simulation() {
   const [realTimeStatus, setRealTimeStatus] = useState(false);
   const [generateConfig, setGenerateConfig] = useState({});
 
-  
-
   useEffect(() => {
     checkCount();
     checkStatus();
   }, [dataInterval]);
 
   useEffect(() => {
+    checkStatus();
+  }, [count]);
+
+  useEffect(() => {
     if (generating) {
       setCheckGeneratingInterval(setInterval(() => {
         checkCount();
         if (count/generateConfig[dataInterval] >= 1) setGenerating(false);
-      }, 2000));
+      }, 3000));
     } else {
       clearInterval(checkGeneratingInterval);
     }
@@ -76,6 +78,7 @@ export default function Simulation() {
   }
 
   const generateMurbPower = () => {
+    setGenerateDisabled(true);
     axios.post(`/api/murb/generate/${dataInterval}`)
     .then((res) => {
       setGenerating(true);
@@ -90,6 +93,7 @@ export default function Simulation() {
     axios.delete(`/api/murb/`)
     .then((res) => {
       checkCount();
+      checkStatus();
       // Implement snackbar
     })
     .catch((err) => {
@@ -110,29 +114,28 @@ export default function Simulation() {
     </Typography>
   )
   
-  const LinearProgressWithLabel = (props) => {
-
-    return (
-      <Box display="flex" alignItems="center">
-        <Box width="100%" mr={1}>
-          <LinearProgress variant="determinate" {...props} />
-        </Box>
-        <Box minWidth={35}>
-          <Typography variant="body2" color="textSecondary">{`${Math.round(
-            props.value,
-          )}%`}</Typography>
-        </Box>
+  const LinearProgressWithLabel = (props) => (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
       </Box>
-    );
-  }
+      <Box minWidth={35}>
+        <Typography variant="body2" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+  
 
   const HistoricStatusVisual = () => {
-    if (generating) {
+    if (generating && count > 0) {
       const progressValue = (count/generateConfig[dataInterval] >= 1) ? 1 : count/generateConfig[dataInterval];
       return (
       <React.Fragment>
         <Typography>Historic Data Generating Progress</Typography>
         <LinearProgressWithLabel value={progressValue * 100} />
+        <br/>
       </React.Fragment>
       )
     } else return null;
