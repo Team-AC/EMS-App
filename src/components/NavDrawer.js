@@ -15,6 +15,7 @@ export default (props) => {
     drawerPaper: {
       width: drawerWidth,
     },
+    appBarSpacer: theme.mixins.toolbar,
   }));
 
   const classes = useStyles();
@@ -27,7 +28,7 @@ export default (props) => {
       }}
       variant="permanent"
     >
-      <br/><br/><br/>
+      <div className={classes.appBarSpacer} />
       <List>
         <ListItem button component = {Link} to ="/">
           <ListItemIcon>
