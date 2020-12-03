@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { makeStyles, useTheme} from '@material-ui/core/styles'
-import {Button, Card, CardActions, CardContent, CardHeader, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Typography} from '@material-ui/core';
+import {Box, Button, Card, CardActions, CardContent, CardHeader, Divider, FormControl, Grid, InputLabel, LinearProgress, MenuItem, Paper, Select, Typography} from '@material-ui/core';
 import { useEffect, useState } from 'react';
+import { blue, green } from '@material-ui/core/colors';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -11,17 +13,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default () => {
+export default function Simulation() {
   const classes = useStyles();
 
-  const [interval, setInterval] = useState('');
+  const [dataInterval, setDataInterval] = useState('');
   const [deleteDisabled, setDeleteDisabled] = useState(true);
   const [generateDisabled, setGenerateDisabled] = useState(true);
+  const [generating, setGenerating] = useState(false);
+  const [checkGeneratingInterval, setCheckGeneratingInterval] = useState(false);
   const [count, setCount] = useState(0);
+  const [realTimeStatus, setRealTimeStatus] = useState(false);
+  const [generateConfig, setGenerateConfig] = useState({});
+
+  
 
   useEffect(() => {
     checkCount();
-  }, [interval]);
+    checkStatus();
+  }, [dataInterval]);
+
+  useEffect(() => {
+    if (generating) {
+      setCheckGeneratingInterval(setInterval(() => {
+        checkCount();
+        if (count/generateConfig[dataInterval] >= 1) setGenerating(false);
+      }, 2000));
+    } else {
+      clearInterval(checkGeneratingInterval);
+    }
+  }, [generating]);
 
   const checkCount = () => {
     axios.get('/api/murb/count')
@@ -36,7 +56,7 @@ export default () => {
       // Cannot delete when nothing in database, able to generate (assuming interval selected)
       } else {
         setDeleteDisabled(true);
-        if (interval) setGenerateDisabled(false);
+        if (dataInterval) setGenerateDisabled(false);
       }
     })
     .catch((err) => {
@@ -44,9 +64,21 @@ export default () => {
     });
   }
 
-  const generateMurbPower = () => {
-    axios.post(`/api/murb/generate/${interval}`)
+  const checkStatus = () => {
+    axios.get('/api/murb/status')
     .then((res) => {
+      setRealTimeStatus(res.data.real_time_data_status);
+      setGenerateConfig(res.data.data_generate_config);
+    })
+    .catch((err) => {
+      // Implement snackbar
+    });
+  }
+
+  const generateMurbPower = () => {
+    axios.post(`/api/murb/generate/${dataInterval}`)
+    .then((res) => {
+      setGenerating(true);
       // Implement snackbar
     })
     .catch((err) => {
@@ -66,18 +98,51 @@ export default () => {
   }
 
   const handleIntervalChange = (event) => {
-    setInterval(event.target.value);
+    setDataInterval(event.target.value);
     if (count === 0) {
       setGenerateDisabled(false);
     }
   };
+
+  const RealTimeStatusVisual = () => (
+    <Typography style={{color: realTimeStatus ? green[500] : blue[500]}}>
+      <b>{realTimeStatus ? 'Simulation Running' : "Not Running"}</b>
+    </Typography>
+  )
+  
+  const LinearProgressWithLabel = (props) => {
+
+    return (
+      <Box display="flex" alignItems="center">
+        <Box width="100%" mr={1}>
+          <LinearProgress variant="determinate" {...props} />
+        </Box>
+        <Box minWidth={35}>
+          <Typography variant="body2" color="textSecondary">{`${Math.round(
+            props.value,
+          )}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  const HistoricStatusVisual = () => {
+    if (generating) {
+      const progressValue = (count/generateConfig[dataInterval] >= 1) ? 1 : count/generateConfig[dataInterval];
+      return (
+      <React.Fragment>
+        <Typography>Historic Data Generating Progress</Typography>
+        <LinearProgressWithLabel value={progressValue * 100} />
+      </React.Fragment>
+      )
+    } else return null;
+  }
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={4}>
         <Card>
           <CardContent>
-
             <Typography variant="h5">
               MURB Simulation
             </Typography>
@@ -85,12 +150,18 @@ export default () => {
             <Divider/>
             <br/>
 
-            <Typography style={{ textAlign: "left"}} variant='body1'>
-              Status of Realtime Generation: TODO
-            </Typography>
+            <HistoricStatusVisual/>
+
+            <div style={{display:"flex"}}>
+              <Typography style={{ textAlign: "left"}}  variant='body1'>
+                Status of Realtime Generation: &nbsp;
+              </Typography>
+              <RealTimeStatusVisual/>
+            </div>
+            
 
             <Typography style={{ textAlign: "left"}} variant='body1'>
-              Amount of data-points in database: {count}
+              Data-points Currently Generated: <b>{count}</b>
             </Typography>
 
           </CardContent>
@@ -109,7 +180,7 @@ export default () => {
                 <FormControl className={classes.formControl}>
                   <InputLabel>Choose Interval</InputLabel>
                   <Select
-                    value={interval}
+                    value={dataInterval}
                     onChange={handleIntervalChange}
                   >
                     <MenuItem value={'pastDay'}>Past Day</MenuItem>
