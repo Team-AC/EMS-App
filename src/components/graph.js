@@ -1,10 +1,14 @@
 import { ResponsiveLine } from '@nivo/line'
 import React from 'react';
 import axios from 'axios';
+import { Typography } from '@material-ui/core';
 
 const Graph = (props) => (
-  <div style={{height: "50vh"}}>
-    <div style={{"marginTop": "70px"}}>Power Consumed by a MURB</div>
+  <div style={{height: "50vh", }}>
+    <Typography variant="h5">
+      Power Consumed by a MURB
+    </Typography>
+    
     <ResponsiveLine
       data={[{
         id: 'murb-power',

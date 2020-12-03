@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Graph from './graph';
-import { Button, ButtonGroup, Card, CardContent, Grid } from '@material-ui/core';
+import { Button, ButtonGroup, Card, CardContent, Grid, Container } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
@@ -72,7 +72,7 @@ export default class Home extends React.Component {
           peakHours,
           offPeakHours
         } = res.data;
-        
+
         const sortedData = this.sortData(aggregatedData)
         const formattedData = this.formatData(sortedData);
 
@@ -106,8 +106,12 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <Grid container direction="column" spacing={6}>
-        <Grid style={{ "margin-bottom": "10px" }} item xs={12}>
+      <Grid
+        container
+        spacing={3}
+        justify="space-between"
+      >
+        <Grid style={{ marginBottom:"50px" }} item xs={12}>
           <Graph
             startDate={this.state.startDate}
             endDate={this.state.endDate}
@@ -115,55 +119,27 @@ export default class Home extends React.Component {
             tickValues={this.state.tickValues}
           />
         </Grid>
-
-        <Grid container direction="row" spacing={3}>
-          <Grid item xs={5} style={{ marginLeft: "60px" }}>
-            <ButtonGroup color="primary" aria-label="outlined primary button group">
-              <Button onClick={() => this.changeInterval("pastYear")}>Past Year</Button>
-              <Button disabled>Past 3 Months</Button>
-              <Button onClick={() => this.changeInterval("pastMonth")}>Past Month</Button>
-              <Button onClick={() => this.changeInterval("pastWeek")}>Past Week</Button>
-              <Button onClick={() => this.changeInterval("pastDay")}>Past Day</Button>
-              <Button disabled startIcon={<DynamicFeedIcon />} onClick={this.liveClick}>Live</Button>
-            </ButtonGroup>
-          </Grid>
-          <Grid item xs={5}>
-            <Card style={{ marginLeft: "300px" }}>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  On Peak Hours = {this.state.peakHours}
-                  <br />
-                    Off Peak Hours = {this.state.offPeakHours}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+        <Grid xs={6}>
+          <ButtonGroup color="primary" aria-label="outlined primary button group">
+            <Button onClick={() => this.changeInterval("pastYear")}>Past Year</Button>
+            <Button disabled>Past 3 Months</Button>
+            <Button onClick={() => this.changeInterval("pastMonth")}>Past Month</Button>
+            <Button onClick={() => this.changeInterval("pastWeek")}>Past Week</Button>
+            <Button onClick={() => this.changeInterval("pastDay")}>Past Day</Button>
+            <Button disabled startIcon={<DynamicFeedIcon />} onClick={this.liveClick}>Live</Button>
+          </ButtonGroup>
         </Grid>
 
-        <Grid container direction="row" spacing={3} style={{ marginLeft: "30px" }}>
-          <Grid item xs={2}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker
-                label="Start Date"
-                inputVariant="outlined"
-                disabled
-                value={this.state.startDate}
-                onChange={(date) => this.onChangeStartDate(date)}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item xs={2}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker
-                label="End Date"
-                inputVariant="outlined"
-                disabled
-                value={this.state.endDate}
-                onChange={(date) => this.onChangeEndDate(date)}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
+        <Grid item xs={3} style={{marginRight:"50px"}}>
+          <Card>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                On Peak Hours = {this.state.peakHours}
+                <br />
+                      Off Peak Hours = {this.state.offPeakHours}
+              </Typography>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     )
@@ -218,5 +194,29 @@ sendRequestPastDay() {
       liveIntervalId,
     }))
   }
+<Grid item xs={12} spacing={6}>
+          <Grid item xs={3}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <DateTimePicker
+                label="Start Date"
+                inputVariant="outlined"
+                disabled
+                value={this.state.startDate}
+                onChange={(date) => this.onChangeStartDate(date)}
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
 
+          <Grid item xs={3}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <DateTimePicker
+                label="End Date"
+                inputVariant="outlined"
+                disabled
+                value={this.state.endDate}
+                onChange={(date) => this.onChangeEndDate(date)}
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+        </Grid>
 */
