@@ -2,7 +2,7 @@ import { ResponsiveLine } from '@nivo/line'
 import React from 'react';
 import axios from 'axios';
 import { Box, Typography } from '@material-ui/core';
-import { cyan } from '@material-ui/core/colors';
+import { cyan, blue, purple } from '@material-ui/core/colors';
 
 const Graph = (props) => (
   <div style={{ height: "50vh" }}>
@@ -24,8 +24,8 @@ const Graph = (props) => (
         tickSize: 5,
         tickPadding: 15,
         tickValues: props.tickValues,
-        legend: 'Time (HH:MM)',
-        legendOffset: 36,
+        legend: 'Time',
+        legendOffset: 42,
         legendPosition: 'middle',
       }}
       axisLeft={{
@@ -56,15 +56,11 @@ const Graph = (props) => (
               textAlign: "left"
             }}
           >
-            <Typography>
-              <Box fontWeight="fontWeightBold">
-                Time: {slice.points[0].data.xFormatted}
-              </Box>
+            <Typography style={{color: purple[300]}}>
+                <b>Time:</b> {slice.points[0].data.xFormatted}
             </Typography>
-            <Typography>
-              <Box fontWeight="fontWeightBold">
-                Power: {slice.points[0].data.yFormatted}
-              </Box>
+            <Typography style={{color: blue[500]}}>
+                <b>Power:</b> {slice.points[0].data.yFormatted}
             </Typography>
           </div>
         )
