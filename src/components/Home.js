@@ -47,7 +47,7 @@ export default class Home extends React.Component {
 
     const formats = {
       "pastDay": "HH:mm",
-      "pastWeek": "dd/MM/yyyy",
+      "pastWeek": "EEEE",
       "pastMonth": "dd/MM/yyyy",
       "pastYear": "LLLL"
     };
