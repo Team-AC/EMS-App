@@ -20,7 +20,7 @@ export default function Simulation() {
   const [deleteDisabled, setDeleteDisabled] = useState(true);
   const [generateDisabled, setGenerateDisabled] = useState(true);
   const [generating, setGenerating] = useState(false);
-  const [checkGeneratingInterval, setCheckGeneratingInterval] = useState(false);
+  const [checkGeneratingInterval, setCheckGeneratingInterval] = useState(0);
   const [count, setCount] = useState(0);
   const [realTimeStatus, setRealTimeStatus] = useState(false);
   const [generateConfig, setGenerateConfig] = useState({});
@@ -32,13 +32,13 @@ export default function Simulation() {
 
   useEffect(() => {
     checkStatus();
+    if (count/generateConfig[dataInterval] >= 1) setGenerating(false);
   }, [count]);
 
   useEffect(() => {
     if (generating) {
       setCheckGeneratingInterval(setInterval(() => {
         checkCount();
-        if (count/generateConfig[dataInterval] >= 1) setGenerating(false);
       }, 3000));
     } else {
       clearInterval(checkGeneratingInterval);
