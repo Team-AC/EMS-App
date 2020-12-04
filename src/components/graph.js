@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Typography } from '@material-ui/core';
 
 const Graph = (props) => (
-  <div style={{height: "50vh", }}>
+  <div style={{ height: "50vh" }}>
     <Typography variant="h5">
       Power Consumed by a MURB
     </Typography>

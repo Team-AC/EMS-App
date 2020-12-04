@@ -7,6 +7,7 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import About from './components/About';
 import Simulation from './components/Simulation';
+import Financial from './components/Financial';
 
 const drawerWidth = 280;
 
@@ -42,6 +43,7 @@ export default () => {
               <Switch>
                 <Route exact path="/" component={Home}></Route>
                 <Route path="/Simulation" component={Simulation}/>
+                <Route path="/Financial" component={Financial}/>
                 <Route path="/About" component={About}/>
               </Switch>
             </Container>
