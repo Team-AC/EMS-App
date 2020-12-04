@@ -64,7 +64,7 @@ const MurbFinancialBar = (props) => (
         tickRotation: 0,
         legend: 'Cost ($)',
         legendPosition: 'middle',
-        legendOffset: -40
+        legendOffset: -80
       }}
       labelSkipWidth={12}
       labelSkipHeight={12}

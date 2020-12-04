@@ -43,7 +43,7 @@ export default class Home extends React.Component {
   }
 
   formatData(data, peak, offpeak) {
-    const formattedData = [], formattedpeakTime=[], formattedoffpeakTime=[];
+    const formattedData = []
 
     const formats = {
       "pastDay": "HH:mm",
@@ -52,22 +52,24 @@ export default class Home extends React.Component {
       "pastYear": "LLLL"
     };
 
-    const peakUsageStart = parseISO(peak.starts);
-    const formattedpeakUsageStart = format(peakUsageStart, formats[this.state.currentInterval]);
-
-    const peakUsageEnd = parseISO(peak.ends);
-    const formattedpeakUsageEnd = format(peakUsageEnd, formats[this.state.currentInterval]);
-
-    const offpeakUsageStart = parseISO(offpeak.starts);
-    const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[this.state.currentInterval]);
-
-    const offpeakUsageEnd = parseISO(offpeak.ends);
-    const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[this.state.currentInterval]);
-
-    this.setState(()=>({
-      peakUsage: formattedpeakUsageStart + ' to ' + formattedpeakUsageEnd,
-      offPeakUsage: formattedoffpeakUsageStart + ' to ' + formattedoffpeakUsageEnd
-    }))
+    if (peak && offpeak){
+      const peakUsageStart = parseISO(peak.starts);
+      const formattedpeakUsageStart = format(peakUsageStart, formats[this.state.currentInterval]);
+  
+      const peakUsageEnd = parseISO(peak.ends);
+      const formattedpeakUsageEnd = format(peakUsageEnd, formats[this.state.currentInterval]);
+  
+      const offpeakUsageStart = parseISO(offpeak.starts);
+      const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[this.state.currentInterval]);
+  
+      const offpeakUsageEnd = parseISO(offpeak.ends);
+      const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[this.state.currentInterval]);
+    
+      this.setState(()=>({
+        peakUsage: formattedpeakUsageStart + ' to ' + formattedpeakUsageEnd,
+        offPeakUsage: formattedoffpeakUsageStart + ' to ' + formattedoffpeakUsageEnd
+      }))
+    }
 
     // loop across the data and change the format of the datas x values
     data.forEach(element => {
@@ -149,10 +151,10 @@ export default class Home extends React.Component {
         <Grid item xs={4} style={{marginRight:"50px"}}>
           <Card>
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                On Peak Usage Time = {this.state.peakUsage}
+              <Typography color="textSecondary" style={{textAlign: 'left'}} gutterBottom>
+                <b>Peak Usage Time:</b> {this.state.peakUsage}
                 <br />
-                Off Peak Usage Time = {this.state.offPeakUsage}
+                <b>Off Peak Usage Time:</b> {this.state.offPeakUsage}
               </Typography>
             </CardContent>
           </Card>
@@ -161,78 +163,3 @@ export default class Home extends React.Component {
     )
   }
 }
-
-
-/*
-sendRequest() {
-    axios.get('/api/murb', {
-      params: {
-        startDate: this.state.startDate,
-        endDate: this.state.endDate
-      }
-    })
-    .then((res) => {
-      this.setState(() => ({
-        tickValues: this.generateTickValues(res.data.map(data => data.TimeStamp)),
-        data: res.data.map(data => ({x: data.TimeStamp, y: data.Power}))
-      }))
-    });
-  }
-
-sendRequestPastDay() {
-    axios.get('/api/murb/pastDay')
-    .then((res) => {
-      const {
-        aggregatedData,
-        peakHours,
-        offPeakHours
-      } = res.data;
-      this.setState(() => ({
-        tickValues: this.generateTickValues(aggregatedData.map(data => data.TimeStamp)),
-        data: aggregatedData.map(data => ({x: data.TimeStamp, y: data.Power})),
-        peakHours,
-        offPeakHours
-      }))
-    });
-  }
-
-    liveClick() {
-    const liveIntervalId = setInterval(() => {
-      const endDate = formatISO(new Date());
-      const startDate = formatISO(subMinutes(new Date(), 5));
-      this.setState(() => ({
-        startDate,
-        endDate
-      }), this.sendRequest)
-    }, 300000);
-
-    this.setState(() => ({
-      liveIntervalId,
-    }))
-  }
-<Grid item xs={12} spacing={6}>
-          <Grid item xs={3}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker
-                label="Start Date"
-                inputVariant="outlined"
-                disabled
-                value={this.state.startDate}
-                onChange={(date) => this.onChangeStartDate(date)}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item xs={3}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker
-                label="End Date"
-                inputVariant="outlined"
-                disabled
-                value={this.state.endDate}
-                onChange={(date) => this.onChangeEndDate(date)}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-        </Grid>
-*/

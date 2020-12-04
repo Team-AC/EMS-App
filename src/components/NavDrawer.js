@@ -1,7 +1,7 @@
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
-import { orange } from '@material-ui/core/colors';
+import { amber, blue, blueGrey, brown, cyan, deepOrange, grey, lightBlue, lightGreen, orange, red, teal, yellow } from '@material-ui/core/colors';
 import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export default (props) => {
@@ -15,62 +15,63 @@ export default (props) => {
     },
     drawerPaper: {
       width: drawerWidth,
-      background: orange[50],
-      elevation: 3,
+      background: lightBlue[50],
     },
     appBarSpacer: theme.mixins.toolbar,
-    
+
   }));
 
   const classes = useStyles();
 
   return (
-    <Drawer 
-      className={classes.drawer}         
+    <Drawer
+      className={classes.drawer}
       classes={{
         paper: classes.drawerPaper,
       }}
       variant="permanent"
-      PaperProps={{elevation:3}}
+      PaperProps={{ elevation: 5 }}
     >
       <div className={classes.appBarSpacer} />
       <List>
-        <ListItem button component = {Link} to ="/">
+        <ListItem button component={Link} to="/">
           <ListItemIcon>
-            <Business/>
+            <Business />
           </ListItemIcon>
-          <ListItemText primary="Energy Data for Building"/>
+          <ListItemText>
+            <b>Energy Data for Building</b>
+          </ListItemText>
         </ListItem>
         <ListItem button>
           <ListItemIcon>
-            <EvStation/>
+            <EvStation />
           </ListItemIcon>
-          <ListItemText primary="Energy Data for EV"/>
+          <ListItemText primary="Energy Data for EV" />
         </ListItem>
         <ListItem button>
           <ListItemIcon>
-            <BatteryChargingFull/>
+            <BatteryChargingFull />
           </ListItemIcon>
-          <ListItemText primary="Energy Data for BESS"/>
+          <ListItemText primary="Energy Data for BESS" />
         </ListItem>
         <ListItem button component={Link} to="Financial">
           <ListItemIcon>
-            <AttachMoney/>
+            <AttachMoney />
           </ListItemIcon>
-          <ListItemText primary ="Financial"/>
+          <ListItemText primary="Financial" />
         </ListItem>
         <ListItem button component={Link} to="/Simulation">
           <ListItemIcon>
-            <TouchAppOutlined/>
+            <TouchAppOutlined />
           </ListItemIcon>
-          <ListItemText primary ="Simulation"/>
+          <ListItemText primary="Simulation" />
         </ListItem>
-        <ListItem button component ={Link} to="/About">
+        <ListItem button component={Link} to="/About">
           <ListItemIcon>
-            <Info/>
+            <Info />
           </ListItemIcon>
-          <ListItemText primary="About"/> 
-        </ListItem>   
+          <ListItemText primary="About" />
+        </ListItem>
       </List>
     </Drawer>
   )
