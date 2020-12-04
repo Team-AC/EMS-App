@@ -17,8 +17,8 @@ export default class Home extends React.Component {
       data: [],
       tickValues: [],
       liveIntervalId: 0,
-      offPeakHours: '',
-      peakHours: '',
+      offPeakUsage: '',
+      peakUsage: '',
       currentInterval: '',
     };
     this.changeInterval = this.changeInterval.bind(this);
@@ -42,14 +42,32 @@ export default class Home extends React.Component {
     return data.sort((dataLeft, dataRight) => compareAsc(parseISO(dataLeft.TimeStamp), parseISO(dataRight.TimeStamp)));
   }
 
-  formatData(data) {
-    const formattedData = [];
+  formatData(data, peak, offpeak) {
+    const formattedData = [], formattedpeakTime=[], formattedoffpeakTime=[];
+
     const formats = {
       "pastDay": "HH:mm",
       "pastWeek": "dd/MM/yyyy",
       "pastMonth": "dd/MM/yyyy",
       "pastYear": "LLLL"
     };
+
+    const peakUsageStart = parseISO(peak.starts);
+    const formattedpeakUsageStart = format(peakUsageStart, formats[this.state.currentInterval]);
+
+    const peakUsageEnd = parseISO(peak.ends);
+    const formattedpeakUsageEnd = format(peakUsageEnd, formats[this.state.currentInterval]);
+
+    const offpeakUsageStart = parseISO(offpeak.starts);
+    const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[this.state.currentInterval]);
+
+    const offpeakUsageEnd = parseISO(offpeak.ends);
+    const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[this.state.currentInterval]);
+
+    this.setState(()=>({
+      peakUsage: formattedpeakUsageStart + ' to ' + formattedpeakUsageEnd,
+      offPeakUsage: formattedoffpeakUsageStart + ' to ' + formattedoffpeakUsageEnd
+    }))
 
     // loop across the data and change the format of the datas x values
     data.forEach(element => {
@@ -69,18 +87,16 @@ export default class Home extends React.Component {
       .then((res) => {
         const {
           aggregatedData,
-          peakHours,
-          offPeakHours
+          peakUsage,
+          offPeakUsage
         } = res.data;
 
         const sortedData = this.sortData(aggregatedData)
-        const formattedData = this.formatData(sortedData);
+        const formattedData = this.formatData(sortedData, peakUsage, offPeakUsage);
 
         this.setState(() => ({
           tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
           data: formattedData.map(data => ({ x: data.TimeStamp, y: data.Power })),
-          peakHours,
-          offPeakHours
         }))
       });
   }
@@ -130,13 +146,13 @@ export default class Home extends React.Component {
           </ButtonGroup>
         </Grid>
 
-        <Grid item xs={3} style={{marginRight:"50px"}}>
+        <Grid item xs={4} style={{marginRight:"50px"}}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                On Peak Hours = {this.state.peakHours}
+                On Peak Usage Time = {this.state.peakUsage}
                 <br />
-                      Off Peak Hours = {this.state.offPeakHours}
+                Off Peak Usage Time = {this.state.offPeakUsage}
               </Typography>
             </CardContent>
           </Card>
