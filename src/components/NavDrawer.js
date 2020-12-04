@@ -1,4 +1,5 @@
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
+import { orange } from '@material-ui/core/colors';
 import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
 import {Link} from "react-router-dom";
 
@@ -14,8 +15,11 @@ export default (props) => {
     },
     drawerPaper: {
       width: drawerWidth,
+      background: orange[50],
+      elevation: 3,
     },
     appBarSpacer: theme.mixins.toolbar,
+    
   }));
 
   const classes = useStyles();
@@ -27,6 +31,7 @@ export default (props) => {
         paper: classes.drawerPaper,
       }}
       variant="permanent"
+      PaperProps={{elevation:3}}
     >
       <div className={classes.appBarSpacer} />
       <List>

@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import About from './components/About';
 import Simulation from './components/Simulation';
 import Financial from './components/Financial';
+import { grey } from '@material-ui/core/colors';
 
 const drawerWidth = 280;
 
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: drawerWidth,
     height: '100vh',
     overflow: 'auto',
+    background: grey[100],
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -24,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   appBarSpacer: theme.mixins.toolbar,
+  
 }));
 
 export default () => {

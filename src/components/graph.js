@@ -1,7 +1,8 @@
 import { ResponsiveLine } from '@nivo/line'
 import React from 'react';
 import axios from 'axios';
-import { Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { cyan } from '@material-ui/core/colors';
 
 const Graph = (props) => (
   <div style={{ height: "50vh" }}>
@@ -12,7 +13,7 @@ const Graph = (props) => (
     <ResponsiveLine
       data={[{
         id: 'murb-power',
-        data: props.data
+        data: props.data,
       }]}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
@@ -35,8 +36,7 @@ const Graph = (props) => (
         legendOffset: -40,
         legendPosition: 'middle'
       }}
-      colors={{ "scheme": "category10" }}
-      borderColor="#000000"
+      colors={[cyan[900]]}
       curve={"natural"}
       enableArea={true}
       pointSize={10}
@@ -53,14 +53,19 @@ const Graph = (props) => (
               background: 'white',
               padding: '9px 12px',
               border: '1px solid #ccc',
+              textAlign: "left"
             }}
           >
-            <div>Time: {slice.points[0].data.xFormatted}</div>
-            <div>
-              <Typography>
-              MURB-power: {slice.points[0].data.yFormatted}
-              </Typography>
-            </div>
+            <Typography>
+              <Box fontWeight="fontWeightBold">
+                Time: {slice.points[0].data.xFormatted}
+              </Box>
+            </Typography>
+            <Typography>
+              <Box fontWeight="fontWeightBold">
+                Power: {slice.points[0].data.yFormatted}
+              </Box>
+            </Typography>
           </div>
         )
       }}
