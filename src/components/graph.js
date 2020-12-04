@@ -4,11 +4,11 @@ import axios from 'axios';
 import { Typography } from '@material-ui/core';
 
 const Graph = (props) => (
-  <div style={{height: "50vh", }}>
+  <div style={{ height: "50vh", }}>
     <Typography variant="h5">
       Power Consumed by a MURB
     </Typography>
-    
+
     <ResponsiveLine
       data={[{
         id: 'murb-power',
@@ -19,23 +19,24 @@ const Graph = (props) => (
       yScale={{ type: 'linear', min: 0, max: 'auto', reverse: false }}
       yFormat=" >-.2f"
       axisBottom={{
-          orient: 'bottom',
-          tickSize: 5,
-          tickPadding: 15,
-          tickValues: props.tickValues,
-          legend: 'Time (HH:MM)',
-          legendOffset: 36,
-          legendPosition: 'middle',
+        orient: 'bottom',
+        tickSize: 5,
+        tickPadding: 15,
+        tickValues: props.tickValues,
+        legend: 'Time (HH:MM)',
+        legendOffset: 36,
+        legendPosition: 'middle',
       }}
       axisLeft={{
-          orient: 'left',
-          tickSize: 5,
-          tickPadding: 5,
-          legend: 'Power (kW)',
-          legendOffset: -40,
-          legendPosition: 'middle'
+        orient: 'left',
+        tickSize: 5,
+        tickPadding: 5,
+        legend: 'Power (kW)',
+        legendOffset: -40,
+        legendPosition: 'middle'
       }}
-      colors={{"scheme":"category10"}}
+      colors={{ "scheme": "category10" }}
+      borderColor="#000000"
       curve={"natural"}
       enableArea={true}
       pointSize={10}
@@ -44,21 +45,25 @@ const Graph = (props) => (
       pointBorderColor={{ from: 'serieColor' }}
       pointLabelYOffset={-12}
       enableSlices={'x'}
-      
+
       sliceTooltip={({ slice }) => {
         return (
-            <div
-                style={{
-                    background: 'white',
-                    padding: '9px 12px',
-                    border: '1px solid #ccc',
-                }}
-            >
-                <div>Time: {slice.points[0].data.xFormatted}</div>
-                <div>MURB-power: {slice.points[0].data.yFormatted}</div>
+          <div
+            style={{
+              background: 'white',
+              padding: '9px 12px',
+              border: '1px solid #ccc',
+            }}
+          >
+            <div>Time: {slice.points[0].data.xFormatted}</div>
+            <div>
+              <Typography>
+              MURB-power: {slice.points[0].data.yFormatted}
+              </Typography>
             </div>
+          </div>
         )
-    }}
+      }}
     />
   </div>
 )
