@@ -1,3 +1,4 @@
+import { green } from '@material-ui/core/colors';
 import { ResponsiveBar } from '@nivo/bar'
 
 const MurbFinancialBar = (props) => (
@@ -10,7 +11,7 @@ const MurbFinancialBar = (props) => (
       padding={0.3}
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}
-      colors={{ scheme: 'nivo' }}
+      colors={[green[500]]}
       defs={[
         {
           id: 'dots',
@@ -52,6 +53,7 @@ const MurbFinancialBar = (props) => (
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
+        tickValues: props.tickValues,
         legend: 'Time',
         legendPosition: 'middle',
         legendOffset: 32

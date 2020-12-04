@@ -1,14 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import MurbFinancialBar from './murbFinancialBar';
+import MurbFinancialBar from './MurbFinancialBar';
 import { Button, ButtonGroup, Card, CardContent, Grid, Container } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 import { compareAsc, format, formatISO, parse, parseISO, subMinutes } from 'date-fns';
 import Typography from '@material-ui/core/Typography';
 
-export default class Home extends React.Component {
+export default class Financial extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,9 +14,8 @@ export default class Home extends React.Component {
       data: [],
       tickValues: [],
       liveIntervalId: 0,
-      offPeakHours: '',
-      peakHours: '',
       currentInterval: '',
+      totalCost: 0
     };
     this.changeInterval = this.changeInterval.bind(this);
   }
@@ -46,7 +42,7 @@ export default class Home extends React.Component {
     const formattedData = [];
     const formats = {
       "pastDay": "HH:mm",
-      "pastWeek": "dd/MM/yyyy",
+      "pastWeek": "EEEE",
       "pastMonth": "dd/MM/yyyy",
       "pastYear": "LLLL"
     };
@@ -70,18 +66,17 @@ export default class Home extends React.Component {
       .then((res) => {
         const {
           aggregatedData,
-          peakHours,
-          offPeakHours
         } = res.data;
 
         const sortedData = this.sortData(aggregatedData)
         const formattedData = this.formatData(sortedData);
 
+        const totalCost = aggregatedData.reduce((total, data) => total + data.Cost, 0).toFixed(2);
+
         this.setState(() => ({
           tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
           data: formattedData.map(data => ({ TimeStamp: data.TimeStamp, Cost: data.Cost })),
-          peakHours,
-          offPeakHours
+          totalCost
         }))
       });
   }
@@ -132,11 +127,12 @@ export default class Home extends React.Component {
           </ButtonGroup>
         </Grid>
 
-        <Grid item xs={3} style={{marginRight:"50px"}}>
+        <Grid item xs={4} style={{marginRight:"50px", textAlign: 'left'}}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Total Cost: 
+                <b>Total Cost Over Period:</b> ${this.state.totalCost} <br/>
+                <b>Total Reimbursed Over Period:</b> Not Implemented
               </Typography>
             </CardContent>
           </Card>
