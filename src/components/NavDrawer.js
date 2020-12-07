@@ -39,7 +39,7 @@ export default (props) => {
             <Business />
           </ListItemIcon>
           <ListItemText>
-            <b>Energy Data for Building</b>
+            Energy Data for Building
           </ListItemText>
         </ListItem>
         <ListItem button>

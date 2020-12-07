@@ -7,7 +7,7 @@ import { cyan, blue, purple } from '@material-ui/core/colors';
 const Graph = (props) => (
   <div style={{ height: "50vh" }}>
     <Typography variant="h5">
-      Power Consumed by a MURB
+      Power Consumed by your MURB
     </Typography>
 
     <ResponsiveLine
