@@ -9,6 +9,8 @@ import About from './components/About';
 import Simulation from './components/Simulation';
 import Financial from './components/Financial';
 import { grey } from '@material-ui/core/colors';
+import Notifier from './components/Notifier';
+
 
 const drawerWidth = 280;
 
@@ -36,7 +38,7 @@ export default () => {
   return (
     <div className="App">
       <Header/>
-
+      <Notifier/>
       <Router>
           <NavDrawer drawerWidth={drawerWidth}/>
 
