@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { removeSnackbar } from './redux/actions';
+import { removeSnackbar } from '../redux/actions';
+import { Button } from '@material-ui/core';
 
 let displayed = [];
 
@@ -32,6 +33,9 @@ export default () => {
       // display snackbar using notistack
       enqueueSnackbar(message, {
         key,
+        action: key => (
+          <Button onClick={() => closeSnackbar(key)}>dismiss</Button>
+        ),
         ...options,
         onClose: (event, reason, myKey) => {
           if (options.onClose) {
