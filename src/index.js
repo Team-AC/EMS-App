@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
-import reducers from './components/redux/reducers';
+import reducers from './redux/reducers';
 
 const store = createStore(combineReducers({ app: reducers }));
 

@@ -4,6 +4,8 @@ import {Box, Button, Card, CardActions, CardContent, CardHeader, Divider, FormCo
 import { useEffect, useState } from 'react';
 import { blue, green } from '@material-ui/core/colors';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { enqueueSnackbar } from '../redux/actions';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Simulation() {
   const classes = useStyles();
-
+  const dispatch = useDispatch(); 
   const [dataInterval, setDataInterval] = useState('');
   const [deleteDisabled, setDeleteDisabled] = useState(true);
   const [generateDisabled, setGenerateDisabled] = useState(true);
@@ -63,6 +65,12 @@ export default function Simulation() {
     })
     .catch((err) => {
       // Implement snackbar
+      dispatch(enqueueSnackbar({
+        message: 'Could not retrieve test data',
+        options: {
+          variant: 'error',
+        },
+      }))
     });
   }
 
@@ -74,6 +82,12 @@ export default function Simulation() {
     })
     .catch((err) => {
       // Implement snackbar
+      dispatch(enqueueSnackbar({
+        message: 'Not generating',
+        options: {
+          variant: 'error',
+        },
+      }))
     });
   }
 
@@ -83,9 +97,21 @@ export default function Simulation() {
     .then((res) => {
       setGenerating(true);
       // Implement snackbar
+      dispatch(enqueueSnackbar({
+        message: 'Generating',
+        options: {
+          variant: 'success',
+        },
+      }))
     })
     .catch((err) => {
       // Implement snackbar
+      dispatch(enqueueSnackbar({
+        message: 'Not generating',
+        options: {
+          variant: 'error',
+        },
+      }))
     })
   }
 
@@ -95,9 +121,21 @@ export default function Simulation() {
       checkCount();
       checkStatus();
       // Implement snackbar
+      dispatch(enqueueSnackbar({
+        message: 'Data deleted',
+        options: {
+          variant: 'success',
+        },
+      }))
     })
     .catch((err) => {
       // Implement snackbar
+      dispatch(enqueueSnackbar({
+        message: 'Could not delete data',
+        options: {
+          variant: 'error',
+        },
+      }))
     })
   }
 

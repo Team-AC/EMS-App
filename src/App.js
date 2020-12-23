@@ -9,8 +9,12 @@ import About from './components/About';
 import Simulation from './components/Simulation';
 import Financial from './components/Financial';
 import { grey } from '@material-ui/core/colors';
+import { useDispatch } from 'react-redux';
 import Notifier from './components/Notifier';
-
+import {
+  enqueueSnackbar as enqueueSnackbarAction,
+  closeSnackbar as closeSnackbarAction,
+} from './redux/actions';
 
 const drawerWidth = 280;
 
@@ -28,31 +32,35 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   appBarSpacer: theme.mixins.toolbar,
-  
+
 }));
 
 export default () => {
+  const dispatch = useDispatch();
+  const enqueueSnackbar = (...args) => dispatch(enqueueSnackbarAction(...args));
+  const closeSnackbar = (...args) => dispatch(closeSnackbarAction(...args));
+
   const classes = useStyles();
-  <CssBaseline/>
+  <CssBaseline />
 
   return (
     <div className="App">
-      <Header/>
-      <Notifier/>
+      <Header />
+      <Notifier />
       <Router>
-          <NavDrawer drawerWidth={drawerWidth}/>
+        <NavDrawer drawerWidth={drawerWidth} />
 
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Container maxWidth="xl" className={classes.container}>
-              <Switch>
-                <Route exact path="/" component={Home}></Route>
-                <Route path="/Simulation" component={Simulation}/>
-                <Route path="/Financial" component={Financial}/>
-                <Route path="/About" component={About}/>
-              </Switch>
-            </Container>
-          </main>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="xl" className={classes.container}>
+            <Switch>
+              <Route exact path="/" component={Home}></Route>
+              <Route path="/Simulation" component={Simulation} />
+              <Route path="/Financial" component={Financial} />
+              <Route path="/About" component={About} />
+            </Switch>
+          </Container>
+        </main>
 
       </Router>
     </div>
