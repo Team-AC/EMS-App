@@ -7,8 +7,11 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 import { compareAsc, format, formatISO, parse, parseISO, subMinutes } from 'date-fns';
 import Typography from '@material-ui/core/Typography';
+import { useDispatch } from 'react-redux';
+import { enqueueSnackbar, ENQUEUE_SNACKBAR } from '../redux/actions';
+import { connect } from 'react-redux'
 
-export default class Home extends React.Component {
+class Home extends React.Component  {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,7 +44,8 @@ export default class Home extends React.Component {
   sortData(data) {
     return data.sort((dataLeft, dataRight) => compareAsc(parseISO(dataLeft.TimeStamp), parseISO(dataRight.TimeStamp)));
   }
-
+  
+   
   formatData(data, peak, offpeak) {
     const formattedData = [], formattedpeakTime=[], formattedoffpeakTime=[];
 
@@ -80,8 +84,8 @@ export default class Home extends React.Component {
       })
     })
     return formattedData;
-  }
-
+  } 
+  
   sendCurrentRequest() {
     axios.get('/api/murb/' + this.state.currentInterval)
       .then((res) => {
@@ -98,6 +102,9 @@ export default class Home extends React.Component {
           tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
           data: formattedData.map(data => ({ x: data.TimeStamp, y: data.Power })),
         }))
+      })
+      .catch((err) => {
+       this.props.dispatching()
       });
   }
 
@@ -116,11 +123,13 @@ export default class Home extends React.Component {
     }, this.sendCurrentRequest);
 
   }
+
   stopLast() {
     clearInterval(this.state.currentInterval);
   }
 
   render() {
+
     return (
       <Grid
         container
@@ -161,3 +170,17 @@ export default class Home extends React.Component {
     )
   }
 }
+
+const dispatching = () => ({ type: ENQUEUE_SNACKBAR});
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatching: () => dispatch(enqueueSnackbar({
+      message: 'Could not retrieve data for clicked interval',
+      options: {
+        variant: 'error',
+      }
+    })),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Home)
