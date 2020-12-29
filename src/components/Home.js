@@ -47,7 +47,7 @@ class Home extends React.Component  {
   
    
   formatData(data, peak, offpeak) {
-    const formattedData = [], formattedpeakTime=[], formattedoffpeakTime=[];
+    const formattedData = []
 
     const formats = {
       "pastDay": "HH:mm",
@@ -56,22 +56,24 @@ class Home extends React.Component  {
       "pastYear": "LLLL"
     };
 
-    const peakUsageStart = parseISO(peak.starts);
-    const formattedpeakUsageStart = format(peakUsageStart, formats[this.state.currentInterval]);
-
-    const peakUsageEnd = parseISO(peak.ends);
-    const formattedpeakUsageEnd = format(peakUsageEnd, formats[this.state.currentInterval]);
-
-    const offpeakUsageStart = parseISO(offpeak.starts);
-    const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[this.state.currentInterval]);
-
-    const offpeakUsageEnd = parseISO(offpeak.ends);
-    const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[this.state.currentInterval]);
-
-    this.setState(()=>({
-      peakUsage: formattedpeakUsageStart + ' to ' + formattedpeakUsageEnd,
-      offPeakUsage: formattedoffpeakUsageStart + ' to ' + formattedoffpeakUsageEnd
-    }))
+    if (peak && offpeak){
+      const peakUsageStart = parseISO(peak.starts);
+      const formattedpeakUsageStart = format(peakUsageStart, formats[this.state.currentInterval]);
+  
+      const peakUsageEnd = parseISO(peak.ends);
+      const formattedpeakUsageEnd = format(peakUsageEnd, formats[this.state.currentInterval]);
+  
+      const offpeakUsageStart = parseISO(offpeak.starts);
+      const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[this.state.currentInterval]);
+  
+      const offpeakUsageEnd = parseISO(offpeak.ends);
+      const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[this.state.currentInterval]);
+    
+      this.setState(()=>({
+        peakUsage: formattedpeakUsageStart + ' to ' + formattedpeakUsageEnd,
+        offPeakUsage: formattedoffpeakUsageStart + ' to ' + formattedoffpeakUsageEnd
+      }))
+    }
 
     // loop across the data and change the format of the datas x values
     data.forEach(element => {
@@ -158,10 +160,10 @@ class Home extends React.Component  {
         <Grid item xs={4} style={{marginRight:"50px"}}>
           <Card>
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                On Peak Usage Time = {this.state.peakUsage}
+              <Typography color="textSecondary" style={{textAlign: 'left'}} gutterBottom>
+                <b>Peak Usage Time:</b> {this.state.peakUsage}
                 <br />
-                Off Peak Usage Time = {this.state.offPeakUsage}
+                <b>Off Peak Usage Time:</b> {this.state.offPeakUsage}
               </Typography>
             </CardContent>
           </Card>
