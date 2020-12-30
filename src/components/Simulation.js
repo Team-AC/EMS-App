@@ -28,9 +28,9 @@ export default function Simulation() {
   const [realTimeStatus, setRealTimeStatus] = useState(false);
   const [generateConfig, setGenerateConfig] = useState({});
   const [powerParams, setpowerParams] = useState({
-    minPower: 0,
-    maxPower: 0,
-    avgPower: 0,
+    minPower: 1,
+    maxPower: 1,
+    avgPower: 1,
   })
 
   useEffect(() => {
@@ -99,7 +99,9 @@ export default function Simulation() {
 
   const generateMurbPower = () => {
     setGenerateDisabled(true);
-    axios.post(`/api/murb/generate/${dataInterval}`)
+    axios.post(`/api/murb/generate/${dataInterval}`, null, {
+      params: powerParams,
+    })
       .then((res) => {
         setGenerating(true);
         // Implement snackbar
