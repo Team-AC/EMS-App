@@ -1,17 +1,14 @@
 version: 0.2
+
 env:
   variables:
     ECR_URI: 479660213652.dkr.ecr.us-east-1.amazonaws.com/ems-app
 
 phases: 
   build:
-    commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...  
+    commands: 
       - docker build -t ems-app:prod .
       - docker tag ems-app:prod $ECR_URI
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
       - docker push $ECR_URI
