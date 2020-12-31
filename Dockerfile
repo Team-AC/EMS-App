@@ -4,9 +4,6 @@ FROM node:14.15.3
 # set working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
-
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
@@ -18,5 +15,8 @@ COPY . ./
 # build app
 RUN npm run build
 
+EXPOSE 5000
+
 # serve app
 CMD npm run serve
+
