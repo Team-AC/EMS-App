@@ -97,6 +97,8 @@ class Home extends React.Component  {
           offPeakUsage
         } = res.data;
 
+        if (aggregatedData.length > 2) {
+
         const sortedData = this.sortData(aggregatedData)
         const formattedData = this.formatData(sortedData, peakUsage, offPeakUsage);
 
@@ -104,6 +106,9 @@ class Home extends React.Component  {
           tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
           data: formattedData.map(data => ({ x: data.TimeStamp, y: data.Power })),
         }))
+        } else {
+          throw "Error: not enough data points"
+        }
       })
       .catch((err) => {
        this.props.dispatching()

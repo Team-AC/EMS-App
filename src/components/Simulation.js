@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider, FormControl, Grid, InputLabel, LinearProgress, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Card, CardActions, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, Grid, InputLabel, LinearProgress, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { blue, green } from '@material-ui/core/colors';
 import React from 'react';
@@ -29,9 +29,18 @@ export default function Simulation() {
   const [generateConfig, setGenerateConfig] = useState({});
   const [powerParams, setpowerParams] = useState({
     minPower: 1,
-    maxPower: 1,
-    avgPower: 1,
+    maxPower: 300,
+    avgPower: 150,
   })
+  const [changeParamsOpen, setParamsOpen] = useState(false);
+
+  const handleOpenParams = () =>{
+    setParamsOpen(true);
+  }
+
+  const handleCloseParams = () => {
+    setParamsOpen(false);
+  };
 
   useEffect(() => {
     checkCount();
@@ -225,15 +234,6 @@ export default function Simulation() {
           <CardActions>
             <Grid container direction="row" justify="space-between">
               <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={generateDisabled}
-                  onClick={generateMurbPower}
-                >
-                  Generate
-                </Button>
-
                 <FormControl className={classes.formControl}>
                   <InputLabel>Choose Interval</InputLabel>
                   <Select
@@ -246,10 +246,63 @@ export default function Simulation() {
                     <MenuItem value={'pastYear'}>Past Year</MenuItem>
                   </Select>
                 </FormControl>
+
+                <Button 
+                  style={{ marginLeft: "20px" }}
+                  variant="contained"
+                  color="secondary"
+                  // disabled={generateDisabled}
+                  onClick={handleOpenParams}
+                >
+                  Set Parameters
+                </Button>
+
+                <Dialog open={changeParamsOpen} onClose={handleCloseParams} aria-labelledby="form-dialog-title">
+                  <DialogTitle id="form-dialog-title">Change power parameters</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Set the parameters to be used.
+                    </DialogContentText>
+                    <TextField
+                      label="Min Power (kW)"
+                      name="minPower"
+                      onChange={handleParams}
+                      fullWidth
+                    />
+                    <TextField
+                      label="Max Power (kW)"
+                      name="maxPower"
+                      onChange={handleParams}
+                      fullWidth
+                    />
+                    <TextField
+                      label="Average Power (kW)"
+                      name="avgPower"
+                      onChange={handleParams}
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseParams} color="primary">
+                      Submit parameters
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Grid>
+              
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={generateDisabled}
+                  onClick={generateMurbPower}
+                >
+                  Generate
+                </Button>
               </Grid>
 
               <Grid item>
-                <Button
+                <Button style={{ marginLeft: "25px" }}
                   variant="contained"
                   color="secondary"
                   disabled={deleteDisabled}
@@ -261,31 +314,6 @@ export default function Simulation() {
             </Grid>
           </CardActions>
         </Card>
-      </Grid>
-      <Grid item xs={2}>
-        <form noValidate autoComplete="off">
-          <TextField
-            variant="outlined"
-            label="Min Power (kW)"
-            name="minPower"
-            onChange={handleParams}
-            multiline
-          />
-          <TextField
-            variant="outlined"
-            label="Max Power (kW)"
-            name="maxPower"
-            onChange={handleParams}
-            multiline
-          />
-          <TextField
-            variant="outlined"
-            label="Average Power (kW)"
-            name="avgPower"
-            onChange={handleParams}
-            multiline
-          />
-        </form>
       </Grid>
     </Grid>
   )
