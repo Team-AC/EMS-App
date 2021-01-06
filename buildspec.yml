@@ -5,14 +5,14 @@ env:
     ECR_URI: 479660213652.dkr.ecr.us-east-1.amazonaws.com/ems-app
     ACC: 479660213652.dkr.ecr.us-east-1.amazonaws.com
     REGION: us-east-1
-    TAG: prod
+    TAG: latest
 
 phases:
   pre_build:
     commands:
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACC
   build:
-    commands: 
+    commands:
       - docker build -t $ECR_URI:$TAG .
       - docker tag $ECR_URI:prod $ECR_URI:$TAG
   post_build:
