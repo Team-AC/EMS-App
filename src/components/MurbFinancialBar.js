@@ -1,5 +1,6 @@
 import { green } from '@material-ui/core/colors';
 import { ResponsiveBar } from '@nivo/bar'
+import React from 'react';
 
 const MurbFinancialBar = (props) => (
   <div style={{ height: "50vh" }}>

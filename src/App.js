@@ -41,7 +41,6 @@ export default () => {
   const closeSnackbar = (...args) => dispatch(closeSnackbarAction(...args));
 
   const classes = useStyles();
-  <CssBaseline />
 
   return (
     <div className="App">

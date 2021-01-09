@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
 import { useTheme } from '@material-ui/core/styles';
 import { lightBlue } from "@material-ui/core/colors";
+import React from 'react';
 
 export default () => {
   const theme = useTheme();
