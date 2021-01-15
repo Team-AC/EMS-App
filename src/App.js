@@ -4,10 +4,11 @@ import './App.css';
 import Home from './components/Home';
 import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/About';
 import Simulation from './components/Simulation';
 import Financial from './components/Financial';
+import Charger from './components/Charger';
 import { grey } from '@material-ui/core/colors';
 import { useDispatch } from 'react-redux';
 import Notifier from './components/Notifier';
@@ -54,9 +55,11 @@ export default () => {
           <Container maxWidth="xl" className={classes.container}>
             <Switch>
               <Route exact path="/" component={Home}></Route>
+              <Route path="/Charger" component={Charger} />
               <Route path="/Simulation" component={Simulation} />
               <Route path="/Financial" component={Financial} />
               <Route path="/About" component={About} />
+              
             </Switch>
           </Container>
         </main>

@@ -132,6 +132,16 @@ export default function Simulation() {
       })
   }
 
+  // const generateEVChargers = () => {
+  //   axios.post(`/api/ev/generate/${dataInterval}`
+  //   ).then(
+  //     //set generating to true
+  //     //show a success snackbar
+  //   )
+  //   //.catch(err)
+  //   //show an error snackbar
+  // }
+
   const deleteMurbPower = () => {
     axios.delete(`/api/murb/`)
       .then((res) => {
@@ -315,6 +325,10 @@ export default function Simulation() {
           </CardActions>
         </Card>
       </Grid>
+      
+      {/* <Grid item xs={4}>
+        
+      </Grid> */}
     </Grid>
   )
 }

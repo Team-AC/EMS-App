@@ -1,18 +1,17 @@
-import React from 'react';
 import axios from 'axios';
-import Graph from './graph';
-import { Button, ButtonGroup, Card, CardContent, Grid, Container } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { Button, ButtonGroup, Grid, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import EVGraph from './EVGraph';
+import ExpandedCard from './ExpandedCard';
+import { compareAsc, format,  parseISO,  } from 'date-fns';
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
-import { compareAsc, format, formatISO, parse, parseISO, subMinutes } from 'date-fns';
-import Typography from '@material-ui/core/Typography';
+import React from 'react';
 import { enqueueSnackbar, ENQUEUE_SNACKBAR } from '../redux/actions';
 import { connect } from 'react-redux'
 
-class Home extends React.Component  {
+class Charger extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       startDate: new Date(),
       endDate: new Date(),
@@ -22,7 +21,10 @@ class Home extends React.Component  {
       offPeakUsage: '',
       peakUsage: '',
       currentInterval: '',
-    };
+      totalPower: 0,
+      numberOfEVs: 0,
+      avgPowerPerEV: 0,
+    }
     this.changeInterval = this.changeInterval.bind(this);
   }
 
@@ -40,11 +42,26 @@ class Home extends React.Component  {
     }), this.sendRequest);
   }
 
+  calcEVPower(data) {
+    let powerconsumed = 0;
+    const vehiclesum = data.length;
+
+    data.forEach(element => {
+      powerconsumed = powerconsumed + element.Power;
+    })
+    
+    this.setState(() => ({
+      totalPower: powerconsumed.toFixed(2),
+      numberOfEVs: vehiclesum,
+      avgPowerPerEV: (powerconsumed/vehiclesum).toFixed(2),
+    }))
+    return data;
+  }
+
   sortData(data) {
     return data.sort((dataLeft, dataRight) => compareAsc(parseISO(dataLeft.TimeStamp), parseISO(dataRight.TimeStamp)));
   }
-  
-   
+
   formatData(data, peak, offpeak) {
     const formattedData = []
 
@@ -86,32 +103,33 @@ class Home extends React.Component  {
     })
     return formattedData;
   } 
-  
+
   sendCurrentRequest() {
-    axios.get('/api/murb/' + this.state.currentInterval)
+    axios.get(`/api/ev/${this.state.currentInterval}`)
       .then((res) => {
         const {
           aggregatedData,
           peakUsage,
           offPeakUsage
         } = res.data;
-
+        
         if (aggregatedData.length > 2) {
 
-        const sortedData = this.sortData(aggregatedData)
-        const formattedData = this.formatData(sortedData, peakUsage, offPeakUsage);
+          const sortedData = this.sortData(aggregatedData)
+          const formattedData = this.formatData(sortedData, peakUsage, offPeakUsage);
+          this.calcEVPower(aggregatedData);
 
-        this.setState(() => ({
-          tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
-          data: formattedData.map(data => ({ x: data.TimeStamp, y: data.Power })),
-        }))
+          this.setState(() => ({
+            tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
+            data: formattedData.map(data => ({ x: data.TimeStamp, y: data.Power })),
+          }))
         } else {
           throw "Error: not enough data points"
         }
-      })
-      .catch((err) => {
-       this.props.dispatching()
       });
+      // .catch((err) => {
+      //   this.props.dispatching()
+      // });
   }
 
   generateTickValues(timestamps) {
@@ -135,49 +153,31 @@ class Home extends React.Component  {
   }
 
   render() {
-
     return (
-      <Grid
-        container
-        spacing={3}
-        justify="space-between"
-      >
-        <Grid style={{ marginBottom:"50px" }} item xs={12}>
-          <Graph
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            data={this.state.data}
-            tickValues={this.state.tickValues}
-          />
-        </Grid>
-        <Grid xs={6}>
-          <ButtonGroup color="primary" aria-label="outlined primary button group">
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+        <ButtonGroup color="primary" aria-label="outlined primary button group">
             <Button onClick={() => this.changeInterval("pastYear")}>Past Year</Button>
-            <Button disabled>Past 3 Months</Button>
+            <Button onClick={() => this.changeInterval("past3Months")}>Past 3 Months</Button>
             <Button onClick={() => this.changeInterval("pastMonth")}>Past Month</Button>
             <Button onClick={() => this.changeInterval("pastWeek")}>Past Week</Button>
             <Button onClick={() => this.changeInterval("pastDay")}>Past Day</Button>
-            <Button disabled startIcon={<DynamicFeedIcon />} onClick={this.liveClick}>Live</Button>
           </ButtonGroup>
         </Grid>
-
-        <Grid item xs={4} style={{marginRight:"50px"}}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" style={{textAlign: 'left'}} gutterBottom>
-                <b>Peak Usage Time:</b> {this.state.peakUsage}
-                <br />
-                <b>Off Peak Usage Time:</b> {this.state.offPeakUsage}
-              </Typography>
-            </CardContent>
-          </Card>
+        <Grid item>
+          <ExpandedCard
+            subheader={'Level 2 - Number One'}
+            avgpower={'Power Consumed (kW): ' + this.state.totalPower}
+            numcars={'Number of Cars: ' + this.state.numberOfEVs}
+            avgcarpower={'Average power per car (kW): ' + this.state.avgPowerPerEV}      
+          />
         </Grid>
       </Grid>
     )
   }
 }
 
-const dispatching = () => ({ type: ENQUEUE_SNACKBAR});
+const dispatching = () => ({ type: ENQUEUE_SNACKBAR });
 const mapDispatchToProps = dispatch => {
   return {
     dispatching: () => dispatch(enqueueSnackbar({
@@ -189,4 +189,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Home)
+export default connect(null, mapDispatchToProps)(Charger)

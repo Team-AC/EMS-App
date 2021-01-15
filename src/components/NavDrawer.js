@@ -1,5 +1,5 @@
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
-import { amber, blue, blueGrey, brown, cyan, deepOrange, grey, lightBlue, lightGreen, orange, red, teal, yellow } from '@material-ui/core/colors';
+import { lightBlue } from '@material-ui/core/colors';
 import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
 import { Link } from "react-router-dom";
 import React from 'react';
@@ -39,17 +39,15 @@ export default (props) => {
           <ListItemIcon>
             <Business />
           </ListItemIcon>
-          <ListItemText>
-            Energy Data for Building
-          </ListItemText>
+          <ListItemText primary="Energy Data for Building" />
         </ListItem>
-        <ListItem button>
+        <ListItem button component={Link} to="Charger">
           <ListItemIcon>
             <EvStation />
           </ListItemIcon>
-          <ListItemText primary="Energy Data for EV" />
+          <ListItemText primary="Energy Data for EV Chargers" />
         </ListItem>
-        <ListItem button>
+        <ListItem button >
           <ListItemIcon>
             <BatteryChargingFull />
           </ListItemIcon>
