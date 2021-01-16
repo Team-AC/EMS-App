@@ -325,10 +325,6 @@ export default function Simulation() {
           </CardActions>
         </Card>
       </Grid>
-      
-      {/* <Grid item xs={4}>
-        
-      </Grid> */}
     </Grid>
   )
 }

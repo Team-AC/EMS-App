@@ -1,6 +1,6 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Button, Card, CardActions, CardContent, CardHeader, Typography } from '@material-ui/core';
-
 
 export default class ExpandedCard extends React.Component {
   constructor(props) {
@@ -17,10 +17,11 @@ export default class ExpandedCard extends React.Component {
 
   render() {
     return (
-      <Card style={{width: '26vw'}}>
+      <Card>
         <CardHeader
+          avatar= {this.props.media}
           title="EV Charger"
-          subheader={this.props.subheader}
+          subheader={'Level ' + this.props.subheader}
         />
         <CardContent style={{textAlign:'left'}}>
           <Typography>{this.props.avgpower}</Typography>
