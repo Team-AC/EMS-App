@@ -24,9 +24,7 @@ export default class ExpandedCard extends React.Component {
           subheader={'Level ' + this.props.subheader}
         />
         <CardContent style={{textAlign:'left'}}>
-          <Typography>{this.props.avgpower}</Typography>
-          <Typography>{this.props.numcars}</Typography>
-          <Typography>{this.props.avgcarpower}</Typography>
+          <Typography style={{whiteSpace: 'pre-line'}}>{this.props.EvInfo}</Typography>
         </CardContent>
         <CardActions disableSpacing>
           <Button
