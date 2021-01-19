@@ -40,6 +40,7 @@ export default function Charger() {
   const [avgPowerPerEV2, setAvgPowerPerEV2] = useState([]);
   const [avgPowerPerEV3, setAvgPowerPerEV3] = useState([]);
 
+  const [cardsTransition, setCardsTransition] = useState([]);
 
   const [numberOfLvTwo, setNumberOfLvTwo] = useState(0);
   const [numberOfLvThree, setNumberOfLvThree] = useState(0);
@@ -152,14 +153,18 @@ export default function Charger() {
     })
   }
 
+  
+
   const displayCards = () => {
     const cards2 = [], cards3 = [];
     if ((numberOfLvTwo >= 1) || (numberOfLvThree >= 1)) {
       let power = totalPower2;
+      
+      // Level 2 Cards
       for (let i = 0; i < numberOfLvTwo; i++) {
         cards2.push(
           <Grid item xs={3} key={i}>
-            <Fade>
+            <Slide direction="left" in={true} style={{ transitionDelay: `${250*i}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[100]}
                 media={
@@ -178,15 +183,17 @@ export default function Charger() {
                 data = {data}
                 tickValues = {tickValues}
               />
-            </Fade>
+            </Slide>
           </Grid>
         )
       }
+
+      // Level 3 Cards
       for (let j = 0; j < numberOfLvThree; j++) {
         let power = totalPower3;
         cards3.push(
           <Grid item xs={3} key={j}>
-            <Fade>
+            <Slide direction="left" in={true} style={{ transitionDelay: `${250*(j + numberOfLvTwo)}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[300]}
                 media={
@@ -201,7 +208,7 @@ export default function Charger() {
                   Average power per EV (kW): ${avgPowerPerEV3[j]}`
                 }
               />
-            </Fade>
+            </Slide>
           </Grid>
         )
       }
