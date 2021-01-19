@@ -1,25 +1,27 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Card, CardActions, CardContent, CardHeader, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, Dialog, DialogContent, Typography } from '@material-ui/core';
+import EVGraph from './EVGraph';
 
 export default class ExpandedCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      expanded: false,
+      open: false,
     };
-    this.handleExpandChange = this.handleExpandChange.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
   }
 
-  handleExpandChange = () => {
-    this.setState({ expanded: !this.state.expanded })
+  handleOpen = () => {
+    this.setState({ open: !this.state.open })
   };
 
   render() {
     return (
       <Card>
         <CardHeader
-          avatar= {this.props.media}
+          style={{backgroundColor: this.props.headerColor}}
+          avatar={this.props.media}
           title="EV Charger"
           subheader={'Level ' + this.props.subheader}
         />
@@ -28,14 +30,29 @@ export default class ExpandedCard extends React.Component {
         </CardContent>
         <CardActions disableSpacing>
           <Button
-            onClick={this.handleExpandChange}
-            aria-expanded={this.state.expanded}
+            onClick={this.handleOpen}
+            aria-expanded={this.state.open}
             aria-label="show-more"
             variant="contained"
             color="primary"
           >
             Show more details
           </Button>
+          <Dialog 
+            fullWidth={true} 
+            maxWidth={'lg'}
+            open={this.state.open} 
+            onClose={this.handleOpen
+            }>
+            <DialogContent style={{overflow: "hidden"}}>
+              <EVGraph
+                startDate={this.props.startDate}
+                endDate={this.props.endDate}
+                data={this.props.data}
+                tickValues={this.props.tickValues}
+              />
+            </DialogContent>
+          </Dialog>
         </CardActions>
       </Card>
     )

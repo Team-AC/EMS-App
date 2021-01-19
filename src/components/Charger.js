@@ -9,32 +9,30 @@ import { useDispatch } from 'react-redux';
 import { enqueueSnackbar } from '../redux/actions';
 import Avatar from '@material-ui/core/Avatar';
 import PowerIcon from '@material-ui/icons/Power';
-import { green, red } from '@material-ui/core/colors';
+import { blue, green, lightBlue, red } from '@material-ui/core/colors';
 import { compareAsc, format, parseISO } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
   lv2: {
-    backgroundColor: red[500],
+    backgroundColor: green[500],
   },
   lv3: {
-    backgroundColor: green[500],
+    backgroundColor: red[500],
   }
 }));
 
 export default function Charger() {
-  
   const classes = useStyles();
   const dispatch = useDispatch();
-
-  const cards = [];
-  const [currentInterval, setCurrentInterval] = useState('');
+  
+  const [currentInterval, setCurrentInterval] = useState('pastDay');
   const [aggregatedData, setAggregatedData] = useState([]);
   const [offPeakUsage, setOffPeakUsage] = useState('');
   const [peakUsage, setPeakUsage] = useState('');
   const [liveIntervalId, setLiveIntervalId] = useState(0);
 
-  const [totalPower2] = useState([]);
-  const [totalPower3] = useState([]);
+  const [totalPower2, setTotalPower2] = useState([]);
+  const [totalPower3, setTotalPower3] = useState([]);
 
   const [numberOfUsesLv2, setNumberOfUsesLv2] = useState([]);
   const [numberOfUsesLv3, setNumberOfUsesLv3] = useState([]);
@@ -49,8 +47,9 @@ export default function Charger() {
   // inputs for <Graph />
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  // tickValues: [],
-  // data: [],
+  const [data, setData] = useState([]);
+  const [tickValues, setTickValues] = useState([]);
+
 
   useEffect(() => {
     checkChargerCount();
@@ -93,104 +92,76 @@ export default function Charger() {
       })
   }
 
-  // calculate total number of uses of the EV Charger
-  const numberOfVehicles = (data) => {
-    let numVehicles = 0;
-    const Lv2Charger = data.filter(element => element.EvChargerType == 2);
-    const Lv3Charger = data.filter(element => element.EvChargerType == 3);
-
-    data.forEach(element => {
-      if (element.EVChargerType === 2) {
-
-      }
-    })
-    return data;
-  }
-
   useEffect(() => {
     calcEVPower(aggregatedData);
+    displayCards();
   }, [aggregatedData])
-  
+
   // calculate power consumed 
   const calcEVPower = (data) => {
     // split the data into level 2 chargers and level 3 chargers
     const Lv2Charger = data.filter(element => element.EvChargerType === 2);
     const Lv3Charger = data.filter(element => element.EvChargerType === 3);
- 
-    if (currentInterval === 'pastDay') {
-      // loop across the Level 2 chargers and calculate the total power consumed by each individual charger  
-      for (let i = 0; i < numberOfLvTwo; i++) {
-        let power2 = 0;
-        let counter = 0;
-        Lv2Charger.forEach(element => {
-          // add the element's Power to the sum
-          if (element.EvChargerNumber === i) {
+    let power2 = 0, power3 = 0;
+    let counter2 = 0, counter3 = 0;
+    let avgPower2 = 0, avgPower3 = 0;
+    for (let i = 0; i < numberOfLvTwo; i++) {
+      Lv2Charger.forEach(element => {
+        if (element.EvChargerNumber === i) {
+          counter2++;
+          if (currentInterval === 'pastDay') {
             power2 = power2 + element.Power;
-            counter++;
-          }
-        })
-        totalPower2[i] = power2.toFixed(2);
-        numberOfUsesLv2[i] = counter;
-        avgPowerPerEV2[i] = (power2/counter).toFixed(2);
-      }
-      for (let j = 0; j < numberOfLvThree; j++) {
-        let power3 = 0;
-        let counter = 0;
-        Lv3Charger.forEach(element => {
-          // add the element's Power to the sum
-          if (element.EvChargerNumber === j) {
-            power3 = power3 + element.Power;
-            counter++;
-          }
-        })
-        totalPower3[j] = power3.toFixed(2);
-        numberOfUsesLv3[j] = counter;
-        avgPowerPerEV3[j] = (power3/counter).toFixed(2);
-      }
-    } else {
-      for (let i = 0; i < numberOfLvTwo; i++) {
-        let power2 = 0;
-        let counter = 0;
-        Lv2Charger.forEach(element => {
-          // add the element's Power to the sum
-          if (element.EvChargerNumber === i) {
+          } else {
             power2 = power2 + element.TotalPower;
-            counter++;
           }
-        })
-        totalPower2[i] = power2.toFixed(2);
-        numberOfUsesLv2[i] = counter;
-        avgPowerPerEV2[i] = (power2/counter).toFixed(2);
+        }
+      })
+      if (power2 != 0 || counter2 != 0) {
+        avgPower2 = (power2 / counter2).toFixed(2);
       }
-      for (let j = 0; j < numberOfLvThree; j++) {
-        let power3 = 0;
-        let counter = 0;
-        Lv3Charger.forEach(element => {
-          // add the element's Power to the sum
-          if (element.EvChargerNumber === j) {
+      handleUpdate(i, power2.toFixed(2), setTotalPower2);
+      handleUpdate(i, counter2, setNumberOfUsesLv2);
+      handleUpdate(i, avgPower2, setAvgPowerPerEV2);
+    }
+
+    for (let i = 0; i < numberOfLvThree; i++) {
+      Lv3Charger.forEach(element => {
+        if (element.EvChargerNumber === i) {
+          counter3++;
+          if (currentInterval === 'pastDay') {
+            power3 = power3 + element.Power;
+          } else {
             power3 = power3 + element.TotalPower;
-            counter++;
           }
-        })
-        totalPower3[j] = power3.toFixed(2);
-        numberOfUsesLv3[j] = counter;
-        avgPowerPerEV3[j] = (power3/counter).toFixed(2);
+        }
+      })
+      if (power3 != 0 || counter3 != 0) {
+        avgPower3 = (power3 / counter3).toFixed(2);
       }
+      handleUpdate(i, power3.toFixed(2), setTotalPower3);
+      handleUpdate(i, counter3, setNumberOfUsesLv3);
+      handleUpdate(i, avgPower3, setAvgPowerPerEV3);
     }
   }
 
-  useEffect (() => {
-    displayCards();
-  }, [totalPower2, totalPower3])
+  const handleUpdate = (index, value, updater) => {
+    updater(prevArray => {
+      const newArray = [...prevArray];
+      newArray[index] = value;
+      return newArray;
+    })
+  }
 
   const displayCards = () => {
+    const cards2 = [], cards3 = [];
     if ((numberOfLvTwo >= 1) || (numberOfLvThree >= 1)) {
       let power = totalPower2;
       for (let i = 0; i < numberOfLvTwo; i++) {
-        cards.push(
-          <Grid item xs={3}>
+        cards2.push(
+          <Grid item xs={3} key={i}>
             <Fade>
               <ExpandedCard
+                headerColor={lightBlue[100]}
                 media={
                   <Avatar className={classes.lv2}>
                     <PowerIcon />
@@ -199,9 +170,13 @@ export default function Charger() {
                 subheader={`2 - Number ${i + 1}`}
                 EvInfo={
                   `Power Consumed (kW): ${power[i]}
-                  Number of Cars: ${numberOfUsesLv2[i]}
+                  Number of EVs: ${numberOfUsesLv2[i]}
                   Average power per EV (kW): ${avgPowerPerEV2[i]}`
                 }
+                startDate = {startDate}
+                endDate = {endDate}
+                data = {data}
+                tickValues = {tickValues}
               />
             </Fade>
           </Grid>
@@ -209,10 +184,11 @@ export default function Charger() {
       }
       for (let j = 0; j < numberOfLvThree; j++) {
         let power = totalPower3;
-        cards.push(
-          <Grid item xs={3}>
+        cards3.push(
+          <Grid item xs={3} key={j}>
             <Fade>
               <ExpandedCard
+                headerColor={lightBlue[300]}
                 media={
                   <Avatar className={classes.lv3}>
                     <PowerIcon />
@@ -221,17 +197,16 @@ export default function Charger() {
                 subheader={`3 - Number ${j + 1}`}
                 EvInfo={
                   `Power Consumed (kW): ${power[j]}
-                  Number of Cars: ${numberOfUsesLv3[j]}
+                  Number of EVs: ${numberOfUsesLv3[j]}
                   Average power per EV (kW): ${avgPowerPerEV3[j]}`
                 }
               />
             </Fade>
           </Grid>
-
         )
       }
     }
-    return cards;
+    return [cards2, cards3];
   }
 
   const sortData = (data) => {
@@ -271,7 +246,6 @@ export default function Charger() {
   }
 
   return (
-    console.log(cards),
     <Grid
       container
       spacing={3}

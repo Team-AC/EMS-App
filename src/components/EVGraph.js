@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 import { cyan, blue, purple } from '@material-ui/core/colors';
 
 const EVGraph = (props) => (
-  <div style={{ height: "50vh" }}>
+  <div style={{ height: "75vh" }}>
     <Typography variant="h5" style={{textAlign:'center'}}>
       Power Consumed by this Charger
     </Typography>
@@ -14,7 +14,7 @@ const EVGraph = (props) => (
         id: 'ev-charger',
         data: props.data,
       }]}
-      margin={{ top: 50, right: 110, bottom: 80, left: 60 }}
+      margin={{ top: 50, right: 110, bottom: 100, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{ type: 'linear', min: 0, max: 'auto', reverse: false }}
       yFormat=" >-.2f"
