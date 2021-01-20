@@ -6,7 +6,7 @@ import React from 'react';
 import EVGraph from './EVGraph';
 import ExpandedCard from './ExpandedCard';
 import { useDispatch } from 'react-redux';
-import { enqueueSnackbar } from '../redux/actions';
+import { enqueueSnackbar } from '../../redux/actions';
 import Avatar from '@material-ui/core/Avatar';
 import PowerIcon from '@material-ui/icons/Power';
 import { blue, green, lightBlue, red } from '@material-ui/core/colors';
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Charger() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  
+
   const [currentInterval, setCurrentInterval] = useState('pastDay');
   const [aggregatedData, setAggregatedData] = useState([]);
   const [offPeakUsage, setOffPeakUsage] = useState('');
@@ -33,13 +33,16 @@ export default function Charger() {
 
   const [totalPower2, setTotalPower2] = useState([]);
   const [totalPower3, setTotalPower3] = useState([]);
-
   const [numberOfUsesLv2, setNumberOfUsesLv2] = useState([]);
   const [numberOfUsesLv3, setNumberOfUsesLv3] = useState([]);
-
   const [avgPowerPerEV2, setAvgPowerPerEV2] = useState([]);
   const [avgPowerPerEV3, setAvgPowerPerEV3] = useState([]);
-
+  const [totalCost2, setTotalCost2] = useState([]);
+  const [totalCost3, setTotalCost3] = useState([]);
+  const [usageTime2, setUsageTime2] = useState([]);
+  const [usageTime3, setUsageTime3] = useState([]);
+  const [avgUsageTime2, setAvgUsageTime2] = useState([]);
+  const [avgUsageTime3, setAvgUsageTime3] = useState([]);
 
   const [numberOfLvTwo, setNumberOfLvTwo] = useState(0);
   const [numberOfLvThree, setNumberOfLvThree] = useState(0);
@@ -76,9 +79,13 @@ export default function Charger() {
       .then((res) => {
         const {
           aggregatedData,
+          offPeakUsage,
           peakUsage,
-          offPeakUsage
+
         } = res.data;
+
+        const sortedData = sortData(aggregatedData);
+        const formattedData = formatData(sortedData, peakUsage, offPeakUsage);
         setAggregatedData(aggregatedData);
       })
       .catch((err) => {
@@ -105,42 +112,60 @@ export default function Charger() {
     let power2 = 0, power3 = 0;
     let counter2 = 0, counter3 = 0;
     let avgPower2 = 0, avgPower3 = 0;
+    let cost2 = 0, cost3 = 0;
+    let chargeTime2 = 0, chargeTime3 = 0;
+    let avgChargeTime2 = 0, avgChargeTime3 = 0;
     for (let i = 0; i < numberOfLvTwo; i++) {
       Lv2Charger.forEach(element => {
         if (element.EvChargerNumber === i) {
           counter2++;
+          cost2 = cost2 + element.Cost
           if (currentInterval === 'pastDay') {
             power2 = power2 + element.Power;
+            chargeTime2 = chargeTime2 + element.ChargeTime;
           } else {
             power2 = power2 + element.TotalPower;
+            chargeTime2 = chargeTime2 + element.TotalChargeTime
           }
         }
       })
       if (power2 != 0 || counter2 != 0) {
         avgPower2 = (power2 / counter2).toFixed(2);
+        avgChargeTime2 = (chargeTime2/counter2).toFixed(2);
       }
       handleUpdate(i, power2.toFixed(2), setTotalPower2);
       handleUpdate(i, counter2, setNumberOfUsesLv2);
       handleUpdate(i, avgPower2, setAvgPowerPerEV2);
+      handleUpdate(i, cost2.toFixed(2), setTotalCost2);
+      handleUpdate(i, chargeTime2.toFixed(2), setUsageTime2);
+      handleUpdate(i, avgChargeTime2, setAvgUsageTime2);
     }
 
     for (let i = 0; i < numberOfLvThree; i++) {
       Lv3Charger.forEach(element => {
         if (element.EvChargerNumber === i) {
           counter3++;
+          cost3 = cost3 + element.Cost;
           if (currentInterval === 'pastDay') {
             power3 = power3 + element.Power;
+            chargeTime3 = chargeTime3 + element.ChargeTime;
           } else {
             power3 = power3 + element.TotalPower;
+            chargeTime3 = chargeTime3 + element.TotalChargeTime;
           }
         }
       })
       if (power3 != 0 || counter3 != 0) {
         avgPower3 = (power3 / counter3).toFixed(2);
+        avgChargeTime3 = (chargeTime3/counter3).toFixed(2);
       }
+
       handleUpdate(i, power3.toFixed(2), setTotalPower3);
       handleUpdate(i, counter3, setNumberOfUsesLv3);
       handleUpdate(i, avgPower3, setAvgPowerPerEV3);
+      handleUpdate(i, cost3.toFixed(2), setTotalCost3);
+      handleUpdate(i, chargeTime3.toFixed(2), setUsageTime3);
+      handleUpdate(i, avgChargeTime3, setAvgUsageTime3);
     }
   }
 
@@ -150,63 +175,6 @@ export default function Charger() {
       newArray[index] = value;
       return newArray;
     })
-  }
-
-  const displayCards = () => {
-    const cards2 = [], cards3 = [];
-    if ((numberOfLvTwo >= 1) || (numberOfLvThree >= 1)) {
-      let power = totalPower2;
-      for (let i = 0; i < numberOfLvTwo; i++) {
-        cards2.push(
-          <Grid item xs={3} key={i}>
-            <Fade>
-              <ExpandedCard
-                headerColor={lightBlue[100]}
-                media={
-                  <Avatar className={classes.lv2}>
-                    <PowerIcon />
-                  </Avatar>
-                }
-                subheader={`2 - Number ${i + 1}`}
-                EvInfo={
-                  `Power Consumed (kW): ${power[i]}
-                  Number of EVs: ${numberOfUsesLv2[i]}
-                  Average power per EV (kW): ${avgPowerPerEV2[i]}`
-                }
-                startDate = {startDate}
-                endDate = {endDate}
-                data = {data}
-                tickValues = {tickValues}
-              />
-            </Fade>
-          </Grid>
-        )
-      }
-      for (let j = 0; j < numberOfLvThree; j++) {
-        let power = totalPower3;
-        cards3.push(
-          <Grid item xs={3} key={j}>
-            <Fade>
-              <ExpandedCard
-                headerColor={lightBlue[300]}
-                media={
-                  <Avatar className={classes.lv3}>
-                    <PowerIcon />
-                  </Avatar>
-                }
-                subheader={`3 - Number ${j + 1}`}
-                EvInfo={
-                  `Power Consumed (kW): ${power[j]}
-                  Number of EVs: ${numberOfUsesLv3[j]}
-                  Average power per EV (kW): ${avgPowerPerEV3[j]}`
-                }
-              />
-            </Fade>
-          </Grid>
-        )
-      }
-    }
-    return [cards2, cards3];
   }
 
   const sortData = (data) => {
@@ -225,21 +193,108 @@ export default function Charger() {
 
     if (peak && offpeak) {
       const peakUsageStart = parseISO(peak.starts);
-      const formattedpeakUsageStart = format(peakUsageStart, formats[this.state.currentInterval]);
+      const formattedpeakUsageStart = format(peakUsageStart, formats[currentInterval]);
 
       const peakUsageEnd = parseISO(peak.ends);
-      const formattedpeakUsageEnd = format(peakUsageEnd, formats[this.state.currentInterval]);
+      const formattedpeakUsageEnd = format(peakUsageEnd, formats[currentInterval]);
 
       const offpeakUsageStart = parseISO(offpeak.starts);
-      const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[this.state.currentInterval]);
+      const formattedoffpeakUsageStart = format(offpeakUsageStart, formats[currentInterval]);
 
       const offpeakUsageEnd = parseISO(offpeak.ends);
-      const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[this.state.currentInterval]);
+      const formattedoffpeakUsageEnd = format(offpeakUsageEnd, formats[currentInterval]);
 
-      setPeakUsage(formattedpeakUsageStart + ' to ' + formattedpeakUsageEnd);
-      setOffPeakUsage(formattedoffpeakUsageStart + ' to ' + formattedoffpeakUsageEnd);
+      setPeakUsage(`${formattedpeakUsageStart} to ${formattedpeakUsageEnd}`);
+      setOffPeakUsage(`${formattedoffpeakUsageStart} to ${formattedoffpeakUsageEnd}`);
     }
+    // loop across the data and change the format of the datas x values
+    data.forEach(element => {
+      const date = parseISO(element.TimeStamp)
+      const formattedDate = format(date, formats[currentInterval])
+
+      formattedData.push({
+        ...element,
+        TimeStamp: formattedDate
+      })
+    })
+    return formattedData;
   }
+
+  const displayCards = () => {
+    const cards2 = [], cards3 = [];
+    if ((numberOfLvTwo >= 1) || (numberOfLvThree >= 1)) {
+      let power = totalPower2;
+      for (let i = 0; i < numberOfLvTwo; i++) {
+        cards2.push(
+          <Grid item xs={3} key={i}>
+            <Fade>
+              <ExpandedCard
+                headerColor={lightBlue[100]}
+                media={
+                  <Avatar className={classes.lv2}>
+                    <PowerIcon />
+                  </Avatar>
+                }
+                subheader={`2 - Number ${i + 1}`}
+                evInfo={
+                  `Power Consumed (kW): ${power[i]}
+                  Number of EVs: ${numberOfUsesLv2[i]}
+                  Average power per EV (kW): ${avgPowerPerEV2[i]}`
+                }
+                detailedInfo={
+                  `Cost ($): ${totalCost2[i]}
+                  Total Usage Time (h): ${usageTime2[i]}
+                  Average Usage Time per EV (h): ${avgUsageTime2[i]}
+                  Peak Usage Time: ${peakUsage}
+                  Off Peak Usage Time: ${offPeakUsage}`
+                }
+                startDate={startDate}
+                endDate={endDate}
+                data={data}
+                tickValues={tickValues}
+              />
+            </Fade>
+          </Grid>
+        )
+      }
+      for (let j = 0; j < numberOfLvThree; j++) {
+        let power = totalPower3;
+        cards3.push(
+          <Grid item xs={3} key={j}>
+            <Fade>
+              <ExpandedCard
+                headerColor={lightBlue[300]}
+                media={
+                  <Avatar className={classes.lv3}>
+                    <PowerIcon />
+                  </Avatar>
+                }
+                subheader={`3 - Number ${j + 1}`}
+                evInfo={
+                  `Power Consumed (kW): ${power[j]}
+                  Number of EVs: ${numberOfUsesLv3[j]}
+                  Average power per EV (kW): ${avgPowerPerEV3[j]}`
+                }
+                detailedInfo={
+                  `Cost ($): ${totalCost3[j]}
+                  Total Usage Time (h): ${usageTime3[j]}
+                  Average Usage Time per EV (h): ${avgUsageTime3[j]}
+                  Peak Usage Time: ${peakUsage}
+                  Off Peak Usage Time: ${offPeakUsage}`
+                }
+                startDate={startDate}
+                endDate={endDate}
+                data={data}
+                tickValues={tickValues}
+              />
+            </Fade>
+          </Grid>
+        )
+      }
+    }
+    return [cards2, cards3];
+  }
+
 
   const changeInterval = (event) => {
     setCurrentInterval(event.currentTarget.value);

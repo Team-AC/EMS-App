@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/About';
 import Simulation from './components/Simulation';
 import Financial from './components/Financial';
-import Charger from './components/Charger';
+import Charger from './components/EV/Charger';
 import { grey } from '@material-ui/core/colors';
 import { useDispatch } from 'react-redux';
 import Notifier from './components/Notifier';
