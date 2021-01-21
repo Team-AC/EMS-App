@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MurbSimulationCard() {
+export default function EvSimulationCard() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [dataInterval, setDataInterval] = useState('');
@@ -26,16 +26,22 @@ export default function MurbSimulationCard() {
   const [count, setCount] = useState(0);
   const [realTimeStatus, setRealTimeStatus] = useState(false);
   const [generateConfig, setGenerateConfig] = useState({});
-  const [powerParams, setPowerParams] = useState({
-    avgPower: 127.59,
-    avgPowerSummer: 139.59,
-    avgPowerFall: 142.24,
-    avgPowerWinter: 128.36,
-    avgPowerSpring: 100.60,
+  const [params, setParams] = useState({
+    numOfEvLevel2: 3,
+    numOfEvLevel3: 3,
+    evLevel2ChargeRate: 10,
+    evLevel3ChargeRate: 100,
+    percentageOfEv: 0.1,
+    evSmallBatteryAverage: 50,
+    evMediumBatteryAverage: 100,
+    evLargeBatteryAverage: 150,
+    evSmallBatteryProbability: 0.05,
+    evMediumBatteryProbability: 0.75,
+    evLargeBatteryProbability: 0.05,
+    carFlow: 'medium'
   })
-  const [defaultPowerParams] = useState(powerParams)
+  const [defaultParams] = useState(params)
   const [changeParamsOpen, setParamsOpen] = useState(false);
-  const [showSeasonalParams, setShowSeasonalParams] = useState(false);
 
   const handleOpenParams = () =>{
     setParamsOpen(true);
@@ -66,7 +72,7 @@ export default function MurbSimulationCard() {
   }, [generating]);
 
   const checkCount = () => {
-    axios.get('/api/murb/count')
+    axios.get('/api/ev/count')
       .then((res) => {
         setCount(res.data.count);
 
@@ -93,27 +99,20 @@ export default function MurbSimulationCard() {
   }
 
   const checkStatus = () => {
-    axios.get('/api/murb/status')
+    axios.get('/api/ev/status')
       .then((res) => {
         setRealTimeStatus(res.data.real_time_data_status);
-        setGenerateConfig(res.data.data_generate_config);
       })
       .catch((err) => {
-        // Implement snackbar
-        dispatch(enqueueSnackbar({
-          message: 'Not generating',
-          options: {
-            variant: 'error',
-          },
-        }))
+        setRealTimeStatus(false);
       });
   }
 
-  const generateMurbPower = () => {
+  const generateEvPower = () => {
     setGenerateDisabled(true);
     setParamsOpen(false);
-    axios.post(`/api/murb/generate/${dataInterval}`, null, {
-      params: powerParams,
+    axios.post(`/api/ev/generate/${dataInterval}`, null, {
+      params,
     })
       .then((res) => {
         setGenerating(true);
@@ -136,18 +135,8 @@ export default function MurbSimulationCard() {
       })
   }
 
-  // const generateEVChargers = () => {
-  //   axios.post(`/api/ev/generate/${dataInterval}`
-  //   ).then(
-  //     //set generating to true
-  //     //show a success snackbar
-  //   )
-  //   //.catch(err)
-  //   //show an error snackbar
-  // }
-
-  const deleteMurbPower = () => {
-    axios.delete(`/api/murb/`)
+  const deleteEvPower = () => {
+    axios.delete(`/api/ev/`)
       .then((res) => {
         checkCount();
         checkStatus();
@@ -177,109 +166,31 @@ export default function MurbSimulationCard() {
     }
   };
 
+  const handleParams = e => {
+    const { name, value } = e.target;
+
+    setParams(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+
+  }
+
   const RealTimeStatusVisual = () => (
     <Typography style={{ color: realTimeStatus ? green[500] : blue[500] }}>
       <b>{realTimeStatus ? 'Simulation Running' : "Not Running"}</b>
     </Typography>
   )
 
-  const LinearProgressWithLabel = (props) => (
-    <Box display="flex" alignItems="center">
-      <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-
-  const HistoricStatusVisual = () => {
-    if (generating && count > 0) {
-      const progressValue = (count / generateConfig[dataInterval] >= 1) ? 1 : count / generateConfig[dataInterval];
-      return (
-        <React.Fragment>
-          <Typography>Historic Data Generating Progress</Typography>
-          <LinearProgressWithLabel value={progressValue * 100} />
-          <br />
-        </React.Fragment>
-      )
-    } else return null;
-  }
-
-  const handleParams = e => {
-    const { name, value } = e.target;
-
-    // Scale seasonal params if not showing
-    if ((name == 'avgPower') && !showSeasonalParams && value) {
-      const scaleFactor = isFinite(value/defaultPowerParams.avgPower) ? value/defaultPowerParams.avgPower : 1;
-      setPowerParams({
-        avgPower: value,
-        avgPowerWinter: defaultPowerParams.avgPowerWinter*scaleFactor,
-        avgPowerSpring: defaultPowerParams.avgPowerSpring*scaleFactor,
-        avgPowerSummer: defaultPowerParams.avgPowerSummer*scaleFactor,
-        avgPowerFall: defaultPowerParams.avgPowerFall*scaleFactor,
-      });
-    }
-
-    else  {
-      setPowerParams(prevState => ({
-        ...prevState,
-        [name]: value
-      }));
-    }
-
-  }
-
-  const OptionalSeasonalParams = (props) => {
-    if (props.show) return (
-      <React.Fragment>
-        <TextField
-          label="Average Power Summer (kW)"
-          name="avgPowerSummer"
-          value={powerParams.avgPowerSummer}
-          onChange={handleParams}
-          fullWidth
-        />
-        <TextField
-          label="Average Power Fall (kW)"
-          name="avgPowerFall"
-          value={powerParams.avgPowerFall}
-          onChange={handleParams}
-          fullWidth
-        />
-        <TextField
-          label="Average Power Winter (kW)"
-          name="avgPowerWinter"
-          value={powerParams.avgPowerWinter}
-          onChange={handleParams}
-          fullWidth
-        />
-        <TextField
-          label="Average Power Spring (kW)"
-          name="avgPowerSpring"
-          value={powerParams.avgPowerSpring}
-          onChange={handleParams}
-          fullWidth
-        />
-      </React.Fragment>
-    ) 
-    return null
-  }
-
   return (
     <Card>
       <CardContent>
         <Typography variant="h5">
-          MURB Simulation
+          EV Simulation
         </Typography>
 
         <Divider />
         <br />
-
-        <HistoricStatusVisual />
 
         <div style={{ display: "flex" }}>
           <Typography style={{ textAlign: "left" }} variant='body1'>
@@ -311,37 +222,105 @@ export default function MurbSimulationCard() {
             </FormControl>
 
             <Dialog open={changeParamsOpen} onClose={handleCloseParams} aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Simulate a MURB's Load Profile</DialogTitle>
+              <DialogTitle id="form-dialog-title">Simulate the EV Chargers and Their Car Flow</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   Set the parameters to be used for the simulation.
                 </DialogContentText>
+
+                <form>
                 <TextField
-                  label="Average Power For the MURB (kW)"
-                  name="avgPower"
-                  value={powerParams.avgPower}
+                  label="Number of Level 2 Chargers"
+                  value={params.numOfEvLevel2}
                   onChange={handleParams}
+                  style={{marginBottom: '15px'}}
                   fullWidth
                 />
-
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={showSeasonalParams}
-                    onChange={() => setShowSeasonalParams(!showSeasonalParams)}
-                  />
-                }
-                label="Manually Adjust Seasonal Parameters"
-              />
-
-              {OptionalSeasonalParams({show: showSeasonalParams})}
+                <TextField
+                  label="Number of Level 3 Chargers"
+                  value={params.numOfEvLevel3}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evLevel2ChargeRate}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evLevel3ChargeRate}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.percentageOfEv}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evSmallBatteryAverage}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evMediumBatteryAverage}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evLargeBatteryAverage}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evSmallBatteryProbability}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evMediumBatteryProbability}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.evLargeBatteryProbability}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                <TextField
+                  label="Charge Rate of Level 2 Chargers (kW)"
+                  value={params.carFlow}
+                  onChange={handleParams}
+                  style={{marginBottom: '15px'}}
+                  fullWidth
+                />
+                </form>
                 
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setPowerParams(defaultPowerParams)} color="secondary">
+                <Button onClick={() => setParams(defaultParams)} color="secondary">
                   Reset Parameters
                 </Button>
-                <Button onClick={generateMurbPower} color="primary">
+                <Button onClick={generateEvPower} color="primary">
                   Start Generation
                 </Button>
               </DialogActions>
@@ -353,7 +332,7 @@ export default function MurbSimulationCard() {
               variant="contained"
               color="secondary"
               disabled={deleteDisabled}
-              onClick={deleteMurbPower}
+              onClick={deleteEvPower}
             >
               Delete
             </Button>
