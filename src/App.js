@@ -6,7 +6,7 @@ import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/About';
-import Simulation from './components/Simulation';
+import Simulation from './components/Simulation/Simulation';
 import Financial from './components/Financial';
 import Charger from './components/Charger';
 import { grey } from '@material-ui/core/colors';
