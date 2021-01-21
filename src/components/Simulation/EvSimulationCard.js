@@ -35,9 +35,9 @@ export default function EvSimulationCard() {
     evSmallBatteryAverage: 50,
     evMediumBatteryAverage: 100,
     evLargeBatteryAverage: 150,
-    evSmallBatteryProbability: 0.05,
+    evSmallBatteryProbability: 0.15,
     evMediumBatteryProbability: 0.75,
-    evLargeBatteryProbability: 0.05,
+    evLargeBatteryProbability: 0.10,
     carFlow: 'medium'
   })
   const [defaultParams] = useState(params)
