@@ -71,7 +71,7 @@ const EVGraph = (props) => {
       </div>
     )
   } else {
-    return (<Alert severity="error"> No data to show </Alert>);
+    return (<Alert severity="error"> Cannot show Power graph </Alert>);
   }
 }
 export default EVGraph;

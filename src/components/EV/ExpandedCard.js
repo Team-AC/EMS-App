@@ -49,24 +49,18 @@ export default class ExpandedCard extends React.Component {
             maxWidth={'lg'}
             open={this.state.openOuter} 
             onClose={this.handleOuterOpen}
+            scroll={'body'}
           >
             <DialogContent style={{overflow:"hidden"}}>
               <EVGraph
-                data={this.props.data}
+                data={this.props.powerData}
                 tickValues={this.props.tickValues}
               />
-              {/* <ChargeBar
-
-              /> */}
+              <ChargeBar
+                data={this.props.chargeData}
+                tickValues={this.props.tickValues}
+              />
             </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleOuterOpen}>
-                Close
-              </Button>
-              <Button onClick={this.handleInnerOpen}>
-                Open Inner Dialog
-              </Button>
-            </DialogActions>
           </Dialog>
         </CardActions>
       </Card>

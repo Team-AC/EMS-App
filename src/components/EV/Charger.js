@@ -50,11 +50,13 @@ export default function Charger() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setendDate] = useState(new Date());
 
-  const [data2, setData2] = useState([]);
-  const [data3, setData3] = useState([]);
+  const [powerData2, setPowerData2] = useState([]);
+  const [powerData3, setPowerData3] = useState([]);
+  const [chargeData2, setChargeData2] = useState([]);
+  const [chargeData3, setChargeData3] = useState([]);
+
   const [tickValues2, setTickValues2] = useState([]);
   const [tickValues3, setTickValues3] = useState([]);
-
 
   useEffect(() => {
     checkChargerCount();
@@ -120,10 +122,12 @@ export default function Charger() {
     let chargeTime2 = 0, chargeTime3 = 0;
     let avgChargeTime2 = 0, avgChargeTime3 = 0;
     let ticks2 = [], ticks3 = [];
-    let data2 = [], data3 = [];
+    let powerData2 = [], powerData3 = [];
+    let chargeData2 = [], chargeData3 = [];
     for (let i = 0; i < numberOfLv2; i++) {
       ticks2 = [];
-      data2 = [];
+      powerData2 = [];
+      chargeData2 = [];
       Lv2Charger.forEach(element => {
         if (element.EvChargerNumber === i) {
           counter2++;
@@ -135,7 +139,8 @@ export default function Charger() {
             power2 = power2 + element.TotalPower;
             chargeTime2 = chargeTime2 + element.TotalChargeTime;
             ticks2.push(element.TimeStamp);
-            data2.push({ x: element.TimeStamp, y: element.TotalPower })
+            powerData2.push({ x: element.TimeStamp, y: element.TotalPower })
+            chargeData2.push({ TimeStamp: element.TimeStamp, ChargeTime: element.TotalChargeTime.toFixed(2)})
           }
         }
       })
@@ -151,12 +156,14 @@ export default function Charger() {
       handleUpdate(i, chargeTime2.toFixed(2), setUsageTime2);
       handleUpdate(i, avgChargeTime2, setAvgUsageTime2);
       handleUpdate(i, ticks2, setTickValues2);
-      handleUpdate(i, data2, setData2);
+      handleUpdate(i, powerData2, setPowerData2);
+      handleUpdate(i, chargeData2, setChargeData2);
     }
 
     for (let i = 0; i < numberOfLv3; i++) {
       ticks3 = [];
-      data3 = []
+      powerData3 = [];
+      chargeData3 = [];
       Lv3Charger.forEach(element => {
         if (element.EvChargerNumber === i) {
           counter3++;
@@ -168,7 +175,8 @@ export default function Charger() {
             power3 = power3 + element.TotalPower;
             chargeTime3 = chargeTime3 + element.TotalChargeTime;
             ticks3.push(element.TimeStamp);
-            data3.push({ x: element.TimeStamp, y: element.TotalPower })
+            powerData3.push({ x: element.TimeStamp, y: element.TotalPower })
+            chargeData3.push({ TimeStamp: element.TimeStamp, ChargeTime: element.TotalChargeTime.toFixed(2)})
           }
         }
       })
@@ -184,7 +192,8 @@ export default function Charger() {
       handleUpdate(i, chargeTime3.toFixed(2), setUsageTime3);
       handleUpdate(i, avgChargeTime3, setAvgUsageTime3);
       handleUpdate(i, ticks3, setTickValues3);
-      handleUpdate(i, data3, setData3);
+      handleUpdate(i, powerData3, setPowerData3);
+      handleUpdate(i, chargeData3, setChargeData3);
     }
   }
 
@@ -274,8 +283,9 @@ export default function Charger() {
                 }
                 startDate={startDate}
                 endDate={endDate}
-                data={data2[i]}
+                powerData={powerData2[i]}
                 tickValues={tickValues2[i]}
+                chargeData={chargeData2[i]}
               />
             </Fade>
           </Grid>
@@ -305,8 +315,9 @@ export default function Charger() {
                 }
                 startDate={startDate}
                 endDate={endDate}
-                data={data3[i]}
+                powerData={powerData3[i]}
                 tickValues={tickValues3[i]}
+                chargeData={chargeData3[i]}
               />
             </Fade>
           </Grid>
