@@ -231,86 +231,99 @@ export default function EvSimulationCard() {
                 <form>
                 <TextField
                   label="Number of Level 2 Chargers"
+                  name="numOfEvLevel2"
                   value={params.numOfEvLevel2}
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
                   label="Number of Level 3 Chargers"
+                  name="numOfEvLevel3"
                   value={params.numOfEvLevel3}
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
                   label="Charge Rate of Level 2 Chargers (kW)"
                   value={params.evLevel2ChargeRate}
+                  name="evLevel2ChargeRate"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
+                  label="Charge Rate of Level 3 Chargers (kW)"
                   value={params.evLevel3ChargeRate}
+                  name="evLevel3ChargeRate"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
+                  label="Percentage of Vehicles that are EVs (in local area)"
                   value={params.percentageOfEv}
+                  name="percentageOfEv"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
-                  value={params.evSmallBatteryAverage}
-                  onChange={handleParams}
-                  style={{marginBottom: '15px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
-                  value={params.evMediumBatteryAverage}
-                  onChange={handleParams}
-                  style={{marginBottom: '15px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
-                  value={params.evLargeBatteryAverage}
-                  onChange={handleParams}
-                  style={{marginBottom: '15px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
+                  label="Percentage of EV's With a Small Battery Size"
                   value={params.evSmallBatteryProbability}
+                  name="evSmallBatteryProbability"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
+                  label="Percentage of EV's With a Medium Battery Size"
                   value={params.evMediumBatteryProbability}
+                  name="evMediumBatteryProbability"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
+                  label="Percentage of EV's With a Large Battery Size"
                   value={params.evLargeBatteryProbability}
+                  name="evLargeBatteryProbability"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
-                  value={params.carFlow}
+                  label='Definition of an average "Small" Battery (kWh)'
+                  value={params.evSmallBatteryAverage}
+                  name="evSmallBatteryAverage"
                   onChange={handleParams}
-                  style={{marginBottom: '15px'}}
+                  style={{marginBottom: '30px'}}
+                  fullWidth
+                />
+                <TextField
+                  label='Definition of an average "Medium" Battery (kWh)'
+                  value={params.evMediumBatteryAverage}
+                  name="evMediumBatteryAverage"
+                  onChange={handleParams}
+                  style={{marginBottom: '30px'}}
+                  fullWidth
+                />
+                <TextField
+                  label='Definition of an average "Large" Battery (kWh)'
+                  value={params.evLargeBatteryAverage}
+                  name="evLargeBatteryAverage"
+                  onChange={handleParams}
+                  style={{marginBottom: '30px'}}
+                  fullWidth
+                />
+
+                <TextField
+                  label="Amount of car flow (in local area)"
+                  value={params.carFlow}
+                  name="carFlow"
+                  onChange={handleParams}
+                  style={{marginBottom: '30px'}}
                   fullWidth
                 />
                 </form>
