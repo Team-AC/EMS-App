@@ -331,7 +331,7 @@ export default function MurbSimulationCard() {
                     onChange={() => setShowSeasonalParams(!showSeasonalParams)}
                   />
                 }
-                label="Manually Adjust Seasonal Parameters"
+                label="Manually Adjust Seasonal Parameters (Defaults are for Toronto)"
               />
 
               {OptionalSeasonalParams({show: showSeasonalParams})}
