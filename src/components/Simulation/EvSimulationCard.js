@@ -31,7 +31,7 @@ export default function EvSimulationCard() {
     numOfEvLevel3: 3,
     evLevel2ChargeRate: 10,
     evLevel3ChargeRate: 100,
-    percentageOfEv: 0.1,
+    percentageOfEv: 0.01,
     evSmallBatteryAverage: 50,
     evMediumBatteryAverage: 100,
     evLargeBatteryAverage: 150,
