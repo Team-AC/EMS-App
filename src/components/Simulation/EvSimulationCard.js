@@ -228,7 +228,6 @@ export default function EvSimulationCard() {
                   Set the parameters to be used for the simulation.
                 </DialogContentText>
 
-                <form>
                 <TextField
                   label="Number of Level 2 Chargers"
                   name="numOfEvLevel2"
@@ -317,16 +316,18 @@ export default function EvSimulationCard() {
                   style={{marginBottom: '30px'}}
                   fullWidth
                 />
-
-                <TextField
-                  label="Amount of car flow (in local area)"
-                  value={params.carFlow}
-                  name="carFlow"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                </form>
+                <FormControl fullWidth>
+                  <InputLabel>Car Flow (in local area)</InputLabel>
+                  <Select
+                    value={params.carFlow}
+                    name="carFlow"
+                    onChange={handleParams}
+                  >
+                    <MenuItem value="low">Low</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="high">High</MenuItem>
+                  </Select>
+                </FormControl>
                 
               </DialogContent>
               <DialogActions>
