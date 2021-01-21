@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Card, CardActions, CardContent, CardHeader, Dialog, DialogActions, DialogContent, Typography } from '@material-ui/core';
 import EVGraph from './EVGraph';
+import ChargeBar from './ChargeBar';
 
 export default class ExpandedCard extends React.Component {
   constructor(props) {
@@ -50,7 +51,13 @@ export default class ExpandedCard extends React.Component {
             onClose={this.handleOuterOpen}
           >
             <DialogContent style={{overflow:"hidden"}}>
-              <Typography style={{whiteSpace: 'pre-line'}}>{this.props.detailedInfo}</Typography>
+              <EVGraph
+                data={this.props.data}
+                tickValues={this.props.tickValues}
+              />
+              {/* <ChargeBar
+
+              /> */}
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleOuterOpen}>
@@ -60,14 +67,6 @@ export default class ExpandedCard extends React.Component {
                 Open Inner Dialog
               </Button>
             </DialogActions>
-          </Dialog>
-          <Dialog
-            fullWidth={true}
-            maxWidth={'md'}
-            open={this.state.openInner}
-            onClose={this.handleInnerOpen}
-          >
-            TEST TEST TEST
           </Dialog>
         </CardActions>
       </Card>

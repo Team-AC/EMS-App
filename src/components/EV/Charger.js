@@ -44,19 +44,21 @@ export default function Charger() {
   const [avgUsageTime2, setAvgUsageTime2] = useState([]);
   const [avgUsageTime3, setAvgUsageTime3] = useState([]);
 
-  const [numberOfLvTwo, setNumberOfLvTwo] = useState(0);
-  const [numberOfLvThree, setNumberOfLvThree] = useState(0);
+  const [numberOfLv2, setNumberOfLv2] = useState(0);
+  const [numberOfLv3, setNumberOfLv3] = useState(0);
 
-  // inputs for <Graph />
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [data, setData] = useState([]);
-  const [tickValues, setTickValues] = useState([]);
+  const [endDate, setendDate] = useState(new Date());
+
+  const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
+  const [tickValues2, setTickValues2] = useState([]);
+  const [tickValues3, setTickValues3] = useState([]);
 
 
   useEffect(() => {
     checkChargerCount();
-  }, [numberOfLvTwo, numberOfLvThree])
+  }, [numberOfLv2, numberOfLv3])
 
   // every render change the information that the card displays
   useEffect(() => {
@@ -69,8 +71,8 @@ export default function Charger() {
       .then((res) => {
         const numLv2 = res.data.numOfEvLevel2;
         const numLv3 = res.data.numOfEvLevel3;
-        setNumberOfLvTwo(parseInt(numLv2));
-        setNumberOfLvThree(parseInt(numLv3));
+        setNumberOfLv2(parseInt(numLv2));
+        setNumberOfLv3(parseInt(numLv3));
       })
   }
 
@@ -86,7 +88,9 @@ export default function Charger() {
 
         const sortedData = sortData(aggregatedData);
         const formattedData = formatData(sortedData, peakUsage, offPeakUsage);
-        setAggregatedData(aggregatedData);
+
+        setAggregatedData(formattedData);
+
       })
       .catch((err) => {
         // Implement snackbar
@@ -115,7 +119,11 @@ export default function Charger() {
     let cost2 = 0, cost3 = 0;
     let chargeTime2 = 0, chargeTime3 = 0;
     let avgChargeTime2 = 0, avgChargeTime3 = 0;
-    for (let i = 0; i < numberOfLvTwo; i++) {
+    let ticks2 = [], ticks3 = [];
+    let data2 = [], data3 = [];
+    for (let i = 0; i < numberOfLv2; i++) {
+      ticks2 = [];
+      data2 = [];
       Lv2Charger.forEach(element => {
         if (element.EvChargerNumber === i) {
           counter2++;
@@ -125,13 +133,16 @@ export default function Charger() {
             chargeTime2 = chargeTime2 + element.ChargeTime;
           } else {
             power2 = power2 + element.TotalPower;
-            chargeTime2 = chargeTime2 + element.TotalChargeTime
+            chargeTime2 = chargeTime2 + element.TotalChargeTime;
+            ticks2.push(element.TimeStamp);
+            data2.push({ x: element.TimeStamp, y: element.TotalPower })
           }
         }
       })
       if (power2 != 0 || counter2 != 0) {
         avgPower2 = (power2 / counter2).toFixed(2);
-        avgChargeTime2 = (chargeTime2/counter2).toFixed(2);
+        avgChargeTime2 = (chargeTime2 / counter2).toFixed(2);
+        generateTickValues(ticks2);
       }
       handleUpdate(i, power2.toFixed(2), setTotalPower2);
       handleUpdate(i, counter2, setNumberOfUsesLv2);
@@ -139,9 +150,13 @@ export default function Charger() {
       handleUpdate(i, cost2.toFixed(2), setTotalCost2);
       handleUpdate(i, chargeTime2.toFixed(2), setUsageTime2);
       handleUpdate(i, avgChargeTime2, setAvgUsageTime2);
+      handleUpdate(i, ticks2, setTickValues2);
+      handleUpdate(i, data2, setData2);
     }
 
-    for (let i = 0; i < numberOfLvThree; i++) {
+    for (let i = 0; i < numberOfLv3; i++) {
+      ticks3 = [];
+      data3 = []
       Lv3Charger.forEach(element => {
         if (element.EvChargerNumber === i) {
           counter3++;
@@ -152,20 +167,24 @@ export default function Charger() {
           } else {
             power3 = power3 + element.TotalPower;
             chargeTime3 = chargeTime3 + element.TotalChargeTime;
+            ticks3.push(element.TimeStamp);
+            data3.push({ x: element.TimeStamp, y: element.TotalPower })
           }
         }
       })
       if (power3 != 0 || counter3 != 0) {
         avgPower3 = (power3 / counter3).toFixed(2);
-        avgChargeTime3 = (chargeTime3/counter3).toFixed(2);
+        avgChargeTime3 = (chargeTime3 / counter3).toFixed(2);
+        generateTickValues(ticks3);
       }
-
       handleUpdate(i, power3.toFixed(2), setTotalPower3);
       handleUpdate(i, counter3, setNumberOfUsesLv3);
       handleUpdate(i, avgPower3, setAvgPowerPerEV3);
       handleUpdate(i, cost3.toFixed(2), setTotalCost3);
       handleUpdate(i, chargeTime3.toFixed(2), setUsageTime3);
       handleUpdate(i, avgChargeTime3, setAvgUsageTime3);
+      handleUpdate(i, ticks3, setTickValues3);
+      handleUpdate(i, data3, setData3);
     }
   }
 
@@ -220,11 +239,18 @@ export default function Charger() {
     return formattedData;
   }
 
+  const generateTickValues = (timestamps) => {
+    const tickValues = [];
+    timestamps.forEach((timestamp, index) => {
+      if ((index % 5) == 1) tickValues.push(timestamp);
+    });
+    return tickValues;
+  }
+
   const displayCards = () => {
     const cards2 = [], cards3 = [];
-    if ((numberOfLvTwo >= 1) || (numberOfLvThree >= 1)) {
-      let power = totalPower2;
-      for (let i = 0; i < numberOfLvTwo; i++) {
+    if ((numberOfLv2 >= 1) || (numberOfLv3 >= 1)) {
+      for (let i = 0; i < numberOfLv2; i++) {
         cards2.push(
           <Grid item xs={3} key={i}>
             <Fade>
@@ -237,30 +263,27 @@ export default function Charger() {
                 }
                 subheader={`2 - Number ${i + 1}`}
                 evInfo={
-                  `Power Consumed (kW): ${power[i]}
-                  Number of EVs: ${numberOfUsesLv2[i]}
-                  Average power per EV (kW): ${avgPowerPerEV2[i]}`
-                }
-                detailedInfo={
-                  `Cost ($): ${totalCost2[i]}
-                  Total Usage Time (h): ${usageTime2[i]}
-                  Average Usage Time per EV (h): ${avgUsageTime2[i]}
-                  Peak Usage Time: ${peakUsage}
-                  Off Peak Usage Time: ${offPeakUsage}`
+                  <span>
+                    <b>Power Consumed (kW):</b> {totalPower2[i]} <br />
+                    <b>Number of EVs:</b> {numberOfUsesLv2[i]} <br />
+                    <b>Average power per EV (kW):</b> {avgPowerPerEV2[i]} <br />
+                    <b>Cost ($):</b> {totalCost2[i]} <br />
+                    <b>Total Usage Time (h):</b> {usageTime2[i]} <br />
+                    <b>Average Usage Time per EV (h):</b> {avgUsageTime2[i]} <br />
+                  </span>
                 }
                 startDate={startDate}
                 endDate={endDate}
-                data={data}
-                tickValues={tickValues}
+                data={data2[i]}
+                tickValues={tickValues2[i]}
               />
             </Fade>
           </Grid>
         )
       }
-      for (let j = 0; j < numberOfLvThree; j++) {
-        let power = totalPower3;
+      for (let i = 0; i < numberOfLv3; i++) {
         cards3.push(
-          <Grid item xs={3} key={j}>
+          <Grid item xs={3} key={i}>
             <Fade>
               <ExpandedCard
                 headerColor={lightBlue[300]}
@@ -269,23 +292,21 @@ export default function Charger() {
                     <PowerIcon />
                   </Avatar>
                 }
-                subheader={`3 - Number ${j + 1}`}
+                subheader={`3 - Number ${i + 1}`}
                 evInfo={
-                  `Power Consumed (kW): ${power[j]}
-                  Number of EVs: ${numberOfUsesLv3[j]}
-                  Average power per EV (kW): ${avgPowerPerEV3[j]}`
-                }
-                detailedInfo={
-                  `Cost ($): ${totalCost3[j]}
-                  Total Usage Time (h): ${usageTime3[j]}
-                  Average Usage Time per EV (h): ${avgUsageTime3[j]}
-                  Peak Usage Time: ${peakUsage}
-                  Off Peak Usage Time: ${offPeakUsage}`
+                  <span>
+                    <b>Power Consumed (kW):</b> {totalPower3[i]} <br />
+                    <b>Number of EVs:</b> {numberOfUsesLv3[i]} <br />
+                    <b>Average power per EV (kW):</b> {avgPowerPerEV3[i]} <br />
+                    <b>Cost ($):</b> {totalCost3[i]} <br />
+                    <b>Total Usage Time (h):</b> {usageTime3[i]} <br />
+                    <b>Average Usage Time per EV (h):</b> {avgUsageTime3[i]} <br />
+                  </span>
                 }
                 startDate={startDate}
                 endDate={endDate}
-                data={data}
-                tickValues={tickValues}
+                data={data3[i]}
+                tickValues={tickValues3[i]}
               />
             </Fade>
           </Grid>
