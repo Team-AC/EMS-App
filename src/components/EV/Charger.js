@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Button, ButtonGroup, Fade, Grid, Slide, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Card, CardContent, CardHeader, Fade, Grid, Slide, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -8,9 +8,10 @@ import ExpandedCard from './ExpandedCard';
 import { useDispatch } from 'react-redux';
 import { enqueueSnackbar } from '../../redux/actions';
 import Avatar from '@material-ui/core/Avatar';
-import PowerIcon from '@material-ui/icons/Power';
+import Power from '@material-ui/icons/Power';
 import { blue, green, lightBlue, red } from '@material-ui/core/colors';
 import { compareAsc, format, parseISO } from 'date-fns';
+import { PowerOff } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   on: {
@@ -65,7 +66,8 @@ export default function Charger() {
 
   useEffect(() => {
     checkStatus();
-  })
+  }, [])
+
   useEffect(() => {
     checkChargerCount();
   }, [numberOfLv2, numberOfLv3])
@@ -291,25 +293,34 @@ export default function Charger() {
     return tickValues;
   }
 
+  const ChargingAvatar = (props) => {
+    if (props.status) {
+      return (
+        <Avatar className={classes.on}>
+          <Power />
+        </Avatar>
+      )
+    } else {
+      return (
+        <Avatar className={classes.off}>
+          <PowerOff />
+        </Avatar>
+      )
+    }
+  }
+
   const displayCards = () => {
     const cards2 = [], cards3 = [];
     let backgroundColor;
     if ((numberOfLv2 >= 1) || (numberOfLv3 >= 1)) {
       for (let i = 0; i < numberOfLv2; i++) {
-        if (status2[i] === 1) {
-          backgroundColor = classes.on;
-        } else {
-          backgroundColor = classes.off;
-        }
         cards2.push(
           <Grid item xs={3} key={i}>
             <Slide direction="left" in={true} style={{ transitionDelay: `${250*(i)}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[100]}
                 media={
-                  <Avatar className={backgroundColor}>
-                    <PowerIcon />
-                  </Avatar>
+                  <ChargingAvatar status={status2[i]} />
                 }
                 subheader={`2 - Number ${i + 1}`}
                 evInfo={
@@ -346,9 +357,7 @@ export default function Charger() {
               <ExpandedCard
                 headerColor={lightBlue[300]}
                 media={
-                  <Avatar className={backgroundColor}>
-                    <PowerIcon />
-                  </Avatar>
+                  <ChargingAvatar status={status3[i]} />
                 }
                 subheader={`3 - Number ${i + 1}`}
                 evInfo={
@@ -387,7 +396,33 @@ export default function Charger() {
       container
       spacing={3}
     >
-      <Grid item xs={12}>
+      <Grid item xs={2}>
+        <Card>
+          <CardHeader
+            avatar={
+              <Avatar className={classes.on}>
+                <Power />
+              </Avatar>
+            }
+            title="Charger is IN USE"
+          />
+        </Card>
+      </Grid>
+
+      <Grid item xs={2}>
+        <Card>
+          <CardHeader
+            avatar={
+              <Avatar className={classes.off}>
+                <PowerOff />
+              </Avatar>
+            }
+            title="Charger is NOT IN USE"
+          />
+        </Card>
+      </Grid>
+      
+      <Grid item xs={8}>
         <ButtonGroup color="primary" aria-label="outlined primary button group">
           <Button value='pastYear' onClick={changeInterval}>Past Year</Button>
           <Button value='past3Months' onClick={changeInterval}>Past 3 Months</Button>
