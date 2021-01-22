@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, Card, CardActions, CardContent, CardHeader, Dialog, DialogActions, DialogContent, Typography } from '@material-ui/core';
 import EVGraph from './EVGraph';
 import ChargeBar from './ChargeBar';
-
+import CostBar from './CostBar';
+import VehicleBar from './VehicleBar';
 export default class ExpandedCard extends React.Component {
   constructor(props) {
     super(props)
@@ -42,7 +43,7 @@ export default class ExpandedCard extends React.Component {
             variant="contained"
             color="primary"
           >
-            Show more details
+            Show graph details
           </Button>
           <Dialog 
             fullWidth={true} 
@@ -58,6 +59,14 @@ export default class ExpandedCard extends React.Component {
               />
               <ChargeBar
                 data={this.props.chargeData}
+                tickValues={this.props.tickValues}
+              />
+              <CostBar
+                data={this.props.costData}
+                tickValues={this.props.tickValues}
+              />
+              <VehicleBar
+                data={this.props.vehicleData}
                 tickValues={this.props.tickValues}
               />
             </DialogContent>
