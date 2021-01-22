@@ -1,4 +1,4 @@
-import { green } from '@material-ui/core/colors';
+import { blue, green } from '@material-ui/core/colors';
 import { ResponsiveBar } from '@nivo/bar'
 import React from 'react';
 
@@ -6,13 +6,13 @@ const MurbFinancialBar = (props) => (
   <div style={{ height: "50vh" }}>
     <ResponsiveBar
       data={props.data}
-      keys={['Cost']}
+      keys={['MurbCost', 'EvCost']}
       indexBy="TimeStamp"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}
-      colors={[green[500]]}
+      colors={[green[500], blue[500]]}
       defs={[
         {
           id: 'dots',

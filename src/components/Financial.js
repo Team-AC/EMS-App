@@ -11,27 +11,20 @@ export default class Financial extends React.Component {
     this.state = {
       startDate: new Date(),
       endDate: new Date(),
-      data: [],
+      murbData: [],
+      evData: [],
       tickValues: [],
       liveIntervalId: 0,
-      currentInterval: '',
-      totalCost: 0
+      currentInterval: 'pastWeek',
+      totalMurbCost: 0,
+      totalEvCost: 0,
     };
     this.changeInterval = this.changeInterval.bind(this);
+    this.mergeArraysUsingTimestamp = this.mergeArraysUsingTimestamp.bind(this);
   }
 
-  onChangeStartDate(startDate) {
-    this.stopLive();
-    this.setState(() => ({
-      startDate
-    }), this.sendRequest);
-  }
-
-  onChangeEndDate(endDate) {
-    this.stopLive();
-    this.setState(() => ({
-      endDate
-    }), this.sendRequest);
+  componentDidMount() {
+    this.sendCurrentRequest()
   }
 
   sortData(data) {
@@ -54,7 +47,7 @@ export default class Financial extends React.Component {
 
       formattedData.push({
         ...element,
-        Cost: element.Cost.toFixed(2),
+        Cost: element.Cost ? element.Cost.toFixed(2): element.TotalCost.toFixed(2),
         TimeStamp: formattedDate
       })
     })
@@ -71,14 +64,33 @@ export default class Financial extends React.Component {
         const sortedData = this.sortData(aggregatedData)
         const formattedData = this.formatData(sortedData);
 
-        const totalCost = aggregatedData.reduce((total, data) => total + data.Cost, 0).toFixed(2);
+        const totalMurbCost = aggregatedData.reduce((total, data) => total + data.Cost, 0).toFixed(2);
 
         this.setState(() => ({
           tickValues: this.generateTickValues(formattedData.map(data => data.TimeStamp)),
-          data: formattedData.map(data => ({ TimeStamp: data.TimeStamp, Cost: data.Cost })),
-          totalCost
+          murbData: formattedData.map(data => ({ TimeStamp: data.TimeStamp, MurbCost: data.Cost })),
+          totalMurbCost
         }))
-      });
+
+        return axios.get('/api/ev/' + this.state.currentInterval)
+      })
+      .then(res => {
+        const {
+          aggregatedData,
+        } = res.data;
+
+        const sortedData = this.sortData(aggregatedData)
+        const formattedData = this.formatData(sortedData);
+
+        const totalEvCost = aggregatedData.reduce((total, data) => total + data.Cost, 0).toFixed(2);
+        const reducedData = this.reduceArrayUsingTimeStamp(formattedData);
+        
+
+        this.setState(() => ({
+          evData: reducedData.map(data => ({ TimeStamp: data.TimeStamp, EvCost: data.Cost })),
+          totalEvCost
+        }))
+      })
   }
 
   generateTickValues(timestamps) {
@@ -96,10 +108,46 @@ export default class Financial extends React.Component {
     }, this.sendCurrentRequest);
 
   }
+
   stopLast() {
     clearInterval(this.state.currentInterval);
   }
 
+  reduceArrayUsingTimeStamp(array) {
+    return array.reduce((reducedArray, data) => {
+      const index = reducedArray.findIndex(element => element.TimeStamp === data.TimeStamp);
+      
+      if (index >= 0) {
+        reducedArray[index].Cost = parseFloat(reducedArray[index].Cost) + parseFloat(data.Cost);
+        reducedArray[index].Cost = reducedArray[index].Cost.toFixed(2);
+
+      } else {
+        reducedArray.push(data);
+      }
+
+      return reducedArray;
+
+    }, [])
+  }
+
+  mergeArraysUsingTimestamp(arraysToMerge) {
+    const mergedArray = [];
+
+    arraysToMerge.forEach(array => {
+      array.forEach(data => {
+        const index = mergedArray.findIndex(element => element.TimeStamp === data.TimeStamp);
+
+        if (index >= 0) {
+          mergedArray[index] = {...mergedArray[index], ...data};
+        } else {
+          mergedArray.push(data);
+        }
+      });
+    });
+
+    return mergedArray;
+  }
+  
   render() {
     return (
       <Grid
@@ -114,7 +162,7 @@ export default class Financial extends React.Component {
           <MurbFinancialBar
             startDate={this.state.startDate}
             endDate={this.state.endDate}
-            data={this.state.data}
+            data={this.mergeArraysUsingTimestamp([this.state.murbData, this.state.evData]) || []}
             tickValues={this.state.tickValues}
           />
         </Grid>
@@ -131,8 +179,8 @@ export default class Financial extends React.Component {
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                <b>Total Cost Over Period:</b> ${this.state.totalCost} <br/>
-                <b>Total Reimbursed Over Period:</b> Not Implemented
+                <b>Total Cost Over Period:</b> ${this.state.totalMurbCost} <br/>
+                <b>Total Reimbursed Over Period:</b> ${this.state.totalEvCost}
               </Typography>
             </CardContent>
           </Card>
