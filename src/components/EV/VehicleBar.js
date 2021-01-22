@@ -1,4 +1,5 @@
-import { blue, green } from '@material-ui/core/colors';
+import { Typography } from '@material-ui/core';
+import { blue, green, purple } from '@material-ui/core/colors';
 import { Alert } from '@material-ui/lab';
 import { ResponsiveBar } from '@nivo/bar'
 import React from 'react';
@@ -6,6 +7,9 @@ import React from 'react';
 const VehicleBar = (props) => {
   if (props.data.length > 0 || props.tickValues.length > 0) {
     return (<div style={{ height: "50vh" }}>
+      <Typography variant="h5" style={{ textAlign: 'center', marginTop: 50 }}>
+        Number of EVs Using this Station
+      </Typography>
       <ResponsiveBar
         data={props.data}
         keys={['VehicleTotal']}
@@ -14,7 +18,7 @@ const VehicleBar = (props) => {
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
-        colors={[green[500]]}
+        colors={[purple[300]]}
         defs={[
           {
             id: 'dots',

@@ -10,7 +10,7 @@ const EVGraph = (props) => {
       <div style={{ height: "50vh" }}>
         <Typography variant="h5" style={{ textAlign: 'center' }}>
           Power Consumed by this Charger
-      </Typography>
+        </Typography>
 
         <ResponsiveLine
           data={[{

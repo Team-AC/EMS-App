@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core';
 import { blue, green } from '@material-ui/core/colors';
 import { Alert } from '@material-ui/lab';
 import { ResponsiveBar } from '@nivo/bar'
@@ -6,6 +7,9 @@ import React from 'react';
 const ChargeBar = (props) => {
   if (props.data.length > 0 || props.tickValues.length > 0) {
     return (<div style={{ height: "50vh" }}>
+      <Typography variant="h5" style={{ textAlign: 'center' }}>
+        Usage Time of the Charger
+      </Typography>
       <ResponsiveBar
         data={props.data}
         keys={['ChargeTime']}
