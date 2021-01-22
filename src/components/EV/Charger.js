@@ -13,10 +13,10 @@ import { blue, green, lightBlue, red } from '@material-ui/core/colors';
 import { compareAsc, format, parseISO } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
-  lv2: {
+  on: {
     backgroundColor: green[500],
   },
-  lv3: {
+  off: {
     backgroundColor: red[500],
   }
 }));
@@ -29,7 +29,8 @@ export default function Charger() {
   const [aggregatedData, setAggregatedData] = useState([]);
   const [offPeakUsage, setOffPeakUsage] = useState('');
   const [peakUsage, setPeakUsage] = useState('');
-  const [liveIntervalId, setLiveIntervalId] = useState(0);
+  const [status2, setStatus2] = useState([]);
+  const [status3, setStatus3] = useState([]);
 
   const [totalPower2, setTotalPower2] = useState([]);
   const [totalPower3, setTotalPower3] = useState([]);
@@ -63,6 +64,9 @@ export default function Charger() {
   const [tickValues3, setTickValues3] = useState([]);
 
   useEffect(() => {
+    checkStatus();
+  })
+  useEffect(() => {
     checkChargerCount();
   }, [numberOfLv2, numberOfLv3])
 
@@ -70,6 +74,16 @@ export default function Charger() {
   useEffect(() => {
     sendCurrentRequest(currentInterval);
   }, [currentInterval])
+
+  const checkStatus = () => {
+    axios.get('/api/ev/status/chargers')
+      .then((res) => {
+        const Lv2Status = res.data.lvl_2_statuses;
+        const Lv3Status = res.data.lvl_3_statuses;
+        setStatus2(Lv2Status);
+        setStatus3(Lv3Status);
+      })
+  }
 
   // get request to set total number of level 2 and 3 chargers 
   const checkChargerCount = () => {
@@ -279,15 +293,21 @@ export default function Charger() {
 
   const displayCards = () => {
     const cards2 = [], cards3 = [];
+    let backgroundColor;
     if ((numberOfLv2 >= 1) || (numberOfLv3 >= 1)) {
       for (let i = 0; i < numberOfLv2; i++) {
+        if (status2[i] === 1) {
+          backgroundColor = classes.on;
+        } else {
+          backgroundColor = classes.off;
+        }
         cards2.push(
           <Grid item xs={3} key={i}>
             <Slide direction="left" in={true} style={{ transitionDelay: `${250*(i)}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[100]}
                 media={
-                  <Avatar className={classes.lv2}>
+                  <Avatar className={backgroundColor}>
                     <PowerIcon />
                   </Avatar>
                 }
@@ -315,13 +335,18 @@ export default function Charger() {
         )
       }
       for (let i = 0; i < numberOfLv3; i++) {
+        if (status3[i] === 1) {
+          backgroundColor = classes.on;
+        } else {
+          backgroundColor = classes.off;
+        }
         cards3.push(
           <Grid item xs={3} key={i}>
             <Slide direction="left" in={true} style={{ transitionDelay: `${250*(i + numberOfLv2)}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[300]}
                 media={
-                  <Avatar className={classes.lv3}>
+                  <Avatar className={backgroundColor}>
                     <PowerIcon />
                   </Avatar>
                 }
