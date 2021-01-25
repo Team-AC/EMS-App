@@ -11,7 +11,7 @@ export default () => {
     <AppBar position="fixed" style={{ background: lightBlue[900] }}>
       <Toolbar>
         <Typography variant="h6" noWrap>
-          Energy Management System
+          PLACEHOLDER Tool
         </Typography>
       </Toolbar>
     </AppBar>

@@ -1,9 +1,9 @@
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
+import { Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { lightBlue } from '@material-ui/core/colors';
-import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
+import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
 import { Link } from "react-router-dom";
 import React from 'react';
-
+import { useState } from 'react';
 
 export default (props) => {
 
@@ -23,7 +23,11 @@ export default (props) => {
   }));
 
   const classes = useStyles();
+  const [open, setOpen] = useState();
 
+  const handleOpen = () => {
+    setOpen(!open);
+  }
   return (
     <Drawer
       className={classes.drawer}
@@ -35,36 +39,43 @@ export default (props) => {
     >
       <div className={classes.appBarSpacer} />
       <List>
-        <ListItem button component={Link} to="/">
-          <ListItemIcon>
-            <Business />
-          </ListItemIcon>
-          <ListItemText primary="Energy Data for Building" />
+        <ListItem button onClick={handleOpen}>
+          <ListItemText primary="Energy Management System" />
+          {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <ListItem button component={Link} to="Charger">
-          <ListItemIcon>
-            <EvStation />
-          </ListItemIcon>
-          <ListItemText primary="Energy Data for EV Chargers" />
-        </ListItem>
-        <ListItem button >
-          <ListItemIcon>
-            <BatteryChargingFull />
-          </ListItemIcon>
-          <ListItemText primary="Energy Data for BESS" />
-        </ListItem>
-        <ListItem button component={Link} to="Financial">
-          <ListItemIcon>
-            <AttachMoney />
-          </ListItemIcon>
-          <ListItemText primary="Financial" />
-        </ListItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <ListItem button component={Link} to="/">
+            <ListItemIcon>
+              <Business />
+            </ListItemIcon>
+            <ListItemText primary="Energy Data for Building" />
+          </ListItem>
+          <ListItem button component={Link} to="Charger">
+            <ListItemIcon>
+              <EvStation />
+            </ListItemIcon>
+            <ListItemText primary="Energy Data for EV Chargers" />
+          </ListItem>
+          <ListItem button >
+            <ListItemIcon>
+              <BatteryChargingFull />
+            </ListItemIcon>
+            <ListItemText primary="Energy Data for BESS" />
+          </ListItem>
+          <ListItem button component={Link} to="Financial">
+            <ListItemIcon>
+              <AttachMoney />
+            </ListItemIcon>
+            <ListItemText primary="Billing" />
+          </ListItem>
+          
+        </Collapse>
         <ListItem button component={Link} to="/Simulation">
-          <ListItemIcon>
-            <TouchAppOutlined />
-          </ListItemIcon>
-          <ListItemText primary="Simulation" />
-        </ListItem>
+            <ListItemIcon>
+              <TouchAppOutlined />
+            </ListItemIcon>
+            <ListItemText primary="Simulation" />
+          </ListItem>
         <ListItem button component={Link} to="/About">
           <ListItemIcon>
             <Info />
