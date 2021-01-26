@@ -1,9 +1,10 @@
 import { Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { lightBlue } from '@material-ui/core/colors';
-import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
+import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, House, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
 import { Link } from "react-router-dom";
 import React from 'react';
 import { useState } from 'react';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 export default (props) => {
 
@@ -39,12 +40,21 @@ export default (props) => {
     >
       <div className={classes.appBarSpacer} />
       <List>
+        <ListItem button component={Link} to="/">
+          <ListItemIcon>
+            <House />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
         <ListItem button onClick={handleOpen}>
+          <ListItemIcon>
+            <ThumbUpIcon />
+          </ListItemIcon>
           <ListItemText primary="Energy Management System" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <ListItem button component={Link} to="/">
+          <ListItem button component={Link} to="MurbEnergy">
             <ListItemIcon>
               <Business />
             </ListItemIcon>

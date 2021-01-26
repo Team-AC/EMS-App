@@ -6,7 +6,7 @@ import React from 'react';
 import EVGraph from './EVGraph';
 import ExpandedCard from './ExpandedCard';
 import { useDispatch } from 'react-redux';
-import { enqueueSnackbar } from '../../redux/actions';
+import { enqueueSnackbar } from '../../../redux/actions';
 import Avatar from '@material-ui/core/Avatar';
 import Power from '@material-ui/icons/Power';
 import { blue, green, lightBlue, red } from '@material-ui/core/colors';

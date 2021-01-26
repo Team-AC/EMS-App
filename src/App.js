@@ -7,8 +7,9 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/About';
 import Simulation from './components/Simulation/Simulation';
-import Financial from './components/Financial';
-import Charger from './components/EV/Charger';
+import Financial from './components/EMS/Financial';
+import Charger from './components/EMS/EV/Charger';
+import MurbEnergy from './components/EMS/MURB/MurbEnergy';
 import { grey } from '@material-ui/core/colors';
 import { useDispatch } from 'react-redux';
 import Notifier from './components/Notifier';
@@ -55,6 +56,7 @@ export default () => {
           <Container maxWidth="xl" className={classes.container}>
             <Switch>
               <Route exact path="/" component={Home}></Route>
+              <Route path="/MurbEnergy" component={MurbEnergy} />
               <Route path="/Charger" component={Charger} />
               <Route path="/Simulation" component={Simulation} />
               <Route path="/Financial" component={Financial} />
