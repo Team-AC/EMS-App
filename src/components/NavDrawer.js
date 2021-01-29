@@ -1,4 +1,4 @@
-import { Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
+import { Collapse, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { lightBlue } from '@material-ui/core/colors';
 import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, House, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
 import { Link } from "react-router-dom";
@@ -24,22 +24,23 @@ export default (props) => {
   }));
 
   const classes = useStyles();
+  const drawerOpen = props.open;
   const [open, setOpen] = useState();
-
+  
   const handleOpen = () => {
     setOpen(!open);
   }
   return (
-    <Drawer
+    <Drawer open={drawerOpen}
       className={classes.drawer}
       classes={{
         paper: classes.drawerPaper,
       }}
-      variant="permanent"
+      variant="persistent"
       PaperProps={{ elevation: 5 }}
     >
       <div className={classes.appBarSpacer} />
-      <List>
+      <List >
         <ListItem button component={Link} to="/">
           <ListItemIcon>
             <House />
@@ -53,6 +54,7 @@ export default (props) => {
           <ListItemText primary="Energy Management System" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+
         <Collapse in={open} timeout="auto" unmountOnExit>
           <ListItem button component={Link} to="MurbEnergy">
             <ListItemIcon>
@@ -78,14 +80,17 @@ export default (props) => {
             </ListItemIcon>
             <ListItemText primary="Billing" />
           </ListItem>
-          
         </Collapse>
+
         <ListItem button component={Link} to="/Simulation">
-            <ListItemIcon>
-              <TouchAppOutlined />
-            </ListItemIcon>
-            <ListItemText primary="Simulation" />
-          </ListItem>
+          <ListItemIcon>
+            <TouchAppOutlined />
+          </ListItemIcon>
+          <ListItemText primary="Simulation" />
+        </ListItem>
+
+        <Divider />
+        
         <ListItem button component={Link} to="/About">
           <ListItemIcon>
             <Info />
