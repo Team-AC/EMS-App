@@ -59,15 +59,17 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [drawerOpen, setDrawerOpen] = useState();
   const headerOpen = useSelector(store => store.header || false);
+  const [drawerOpen, setDrawerOpen] = useState(headerOpen);
  
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   }
   const openingHeader = () => {
+    setDrawerOpen(true);
     dispatch(openHeader(true));
   }
+
   const menu = () => {
     return (
       <IconButton color="inherit" onClick={toggleDrawer}>

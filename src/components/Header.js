@@ -17,7 +17,7 @@ export default (props) => {
       <Toolbar>
       {props.menu()}
         <Typography variant="h6" noWrap>
-          PLACEHOLDER Tool
+          OUR PLATFORM (PLACEHOLDER)
         </Typography>
       </Toolbar>
     </AppBar>

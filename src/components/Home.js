@@ -10,7 +10,7 @@ const useStyles = makeStyles({
 });
 export default function Home(props) {
   const classes = useStyles();
-  const [transitions, setTransitions] = useState([false, false, false])
+  const [transitions, setTransitions] = useState([false, false, false, false])
 
   useEffect(() => {
     transitions.forEach((_, i) => {
@@ -47,7 +47,9 @@ export default function Home(props) {
 
             <br /><br />
             <Grid xs="5">
-              {props.startButton()}           
+              <Slide direction="left" in={transitions[3]} mountOnEnter unmountOnExit>
+                {props.startButton()}
+              </Slide>   
             </Grid>
           </Grid>
         </Grid>
