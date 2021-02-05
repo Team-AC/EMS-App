@@ -50,10 +50,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: headerHeight,
   },
   startButton: {
-    height: 100,
+    height: 50,
     width: 200,
-    background: blue[600],
-    boxShadow: blue[600],
   },
   appBarSpacer: theme.mixins.toolbar,
 }));
@@ -80,7 +78,7 @@ export default () => {
 
   const startButton = () => {
     return(
-      <Button onClick={openingHeader} component={Link} to="/Instructions" className={classes.startButton}>Get Started</Button>
+      <Button variant="contained" color="primary" onClick={openingHeader} component={Link} to="/Instructions" className={classes.startButton}>Get Started</Button>
     )
   }
   const header = () => {
