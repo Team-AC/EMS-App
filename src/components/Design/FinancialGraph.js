@@ -20,7 +20,6 @@ const FinancialGraph = (props) => {
           margin={{ top: 50, right: 100, bottom: 100, left: 50 }}
           xScale={{ type: 'point' }}
           yScale={{ type: 'linear', min: 0, max: 'auto', reverse: false }}
-          yFormat=" >-.2f"
           axisBottom={{
             orient: 'bottom',
             tickSize: 5,
@@ -34,7 +33,7 @@ const FinancialGraph = (props) => {
             orient: 'left',
             tickSize: 5,
             tickPadding: 5,
-            legend: 'Power (kW)',
+            legend: 'Cost ($)',
             legendOffset: -40,
             legendPosition: 'middle'
           }}
@@ -47,7 +46,6 @@ const FinancialGraph = (props) => {
           pointBorderColor={{ from: 'serieColor' }}
           pointLabelYOffset={-12}
           enableSlices={'x'}
-
           sliceTooltip={({ slice }) => {
             return (
               <div
@@ -62,7 +60,7 @@ const FinancialGraph = (props) => {
                   <b>Time:</b> {slice.points[0].data.xFormatted}
                 </Typography>
                 <Typography style={{ color: blue[500] }}>
-                  <b>Cost:</b> {slice.points[0].data.yFormatted}
+                  <b>Cost:</b> ${slice.points[0].data.yFormatted.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </Typography>
               </div>
             )

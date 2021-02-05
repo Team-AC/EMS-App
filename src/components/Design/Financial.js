@@ -3,6 +3,7 @@ import React from 'react';
 import { setDate } from 'date-fns';
 import { useEffect, useState } from 'react';
 import FinancialGraph from "./FinancialGraph";
+import { Button, Grid, Typography } from '@material-ui/core';
 
 export default function Financial() {
 
@@ -29,7 +30,7 @@ export default function Financial() {
   }, [])
 
   const formatForGraph = ((dataArray) => {
-    console.log(dataArray)
+    
     return dataArray.map((data) => ({y: data.lvl_2 + data.lvl_3, x: data.year}))
   })
 
@@ -41,6 +42,9 @@ export default function Financial() {
   }
 
   return (
-    <FinancialGraph data={formatForGraph(data)}/>
+    <Grid Container>
+      <FinancialGraph data={formatForGraph(data)}/>
+      <Button />
+    </Grid>
   )
 }
