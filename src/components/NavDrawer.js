@@ -1,11 +1,14 @@
 import { Collapse, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { lightBlue } from '@material-ui/core/colors';
-import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, House, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
+import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, House, Inbox, Info, InsertChartOutlined, TouchAppOutlined } from '@material-ui/icons';
 import { Link } from "react-router-dom";
 import React from 'react';
 import { useState } from 'react';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
+import BuildIcon from '@material-ui/icons/Build';
+import InsertChartIcon from '@material-ui/icons/InsertChart';
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 
 export default (props) => {
 
@@ -29,11 +32,11 @@ export default (props) => {
   const [openEms, setOpenEms] = useState(false);
   const [openDesign, setOpenDesign] = useState(false);
   const [openSimulation, setOpenSimulation] = useState(false);
-  
+
   const handleOpen = (open, setOpen) => {
     setOpen(!open);
   }
-  
+
   return (
     <Drawer open={drawerOpen}
       className={classes.drawer}
@@ -45,10 +48,18 @@ export default (props) => {
     >
       <div className={classes.appBarSpacer} />
       <List >
+        <ListItem button component={Link} to="/Instructions">
+          <ListItemIcon>
+            <ChromeReaderModeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Instructions" />
+        </ListItem>
+        
+        <Divider />
 
         <ListItem button onClick={() => handleOpen(openDesign, setOpenDesign)}>
           <ListItemIcon>
-            <ThumbUpIcon />
+            <BuildIcon />
           </ListItemIcon>
           <ListItemText primary="Design" />
           {openDesign ? <ExpandLess /> : <ExpandMore />}
@@ -57,11 +68,13 @@ export default (props) => {
         <Collapse in={openDesign} timeout="auto" unmountOnExit>
           <ListItem button component={Link} to="Financial">
             <ListItemIcon>
-              <Business />
+              <LocalAtmIcon />
             </ListItemIcon>
             <ListItemText primary="Financial" />
           </ListItem>
         </Collapse>
+
+        <Divider />
 
         <ListItem button component={Link} to="/Simulation">
           <ListItemIcon>
@@ -70,9 +83,11 @@ export default (props) => {
           <ListItemText primary="Simulation" />
         </ListItem>
 
+        <Divider />
+
         <ListItem button onClick={() => handleOpen(openEms, setOpenEms)}>
           <ListItemIcon>
-            <ThumbUpIcon />
+            <InsertChartIcon />
           </ListItemIcon>
           <ListItemText primary="Energy Management System" />
           {openEms ? <ExpandLess /> : <ExpandMore />}
@@ -107,12 +122,6 @@ export default (props) => {
 
         <Divider />
 
-        <ListItem button component={Link} to="/Instructions">
-          <ListItemIcon>
-            <ChromeReaderModeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Instructions" />
-        </ListItem>
         <ListItem button component={Link} to="/About">
           <ListItemIcon>
             <Info />
