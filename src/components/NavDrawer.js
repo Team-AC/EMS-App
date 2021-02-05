@@ -25,11 +25,14 @@ export default (props) => {
 
   const classes = useStyles();
   const drawerOpen = props.open;
-  const [open, setOpen] = useState();
+  const [openEms, setOpenEms] = useState();
+  const [openDesign, setOpenDesign] = useState();
+  const [openSimulation, setOpenSimulation] = useState();
   
-  const handleOpen = () => {
+  const handleOpen = (open, setOpen) => {
     setOpen(!open);
   }
+  
   return (
     <Drawer open={drawerOpen}
       className={classes.drawer}
@@ -47,15 +50,40 @@ export default (props) => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button onClick={handleOpen}>
+
+        <ListItem button onClick={() => handleOpen(openDesign, setOpenDesign)}>
+          <ListItemIcon>
+            <ThumbUpIcon />
+          </ListItemIcon>
+          <ListItemText primary="Design" />
+          {openDesign ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+
+        <Collapse in={openDesign} timeout="auto" unmountOnExit>
+          <ListItem button component={Link} to="Financial">
+            <ListItemIcon>
+              <Business />
+            </ListItemIcon>
+            <ListItemText primary="Financial" />
+          </ListItem>
+        </Collapse>
+
+        <ListItem button component={Link} to="/Simulation">
+          <ListItemIcon>
+            <TouchAppOutlined />
+          </ListItemIcon>
+          <ListItemText primary="Simulation" />
+        </ListItem>
+
+        <ListItem button onClick={() => handleOpen(openEms, setOpenEms)}>
           <ListItemIcon>
             <ThumbUpIcon />
           </ListItemIcon>
           <ListItemText primary="Energy Management System" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {openEms ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
 
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={openEms} timeout="auto" unmountOnExit>
           <ListItem button component={Link} to="MurbEnergy">
             <ListItemIcon>
               <Business />
@@ -74,20 +102,13 @@ export default (props) => {
             </ListItemIcon>
             <ListItemText primary="Energy Data for BESS" />
           </ListItem>
-          <ListItem button component={Link} to="Financial">
+          <ListItem button component={Link} to="Billing">
             <ListItemIcon>
               <AttachMoney />
             </ListItemIcon>
             <ListItemText primary="Billing" />
           </ListItem>
         </Collapse>
-
-        <ListItem button component={Link} to="/Simulation">
-          <ListItemIcon>
-            <TouchAppOutlined />
-          </ListItemIcon>
-          <ListItemText primary="Simulation" />
-        </ListItem>
 
         <Divider />
         
