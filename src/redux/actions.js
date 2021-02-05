@@ -1,6 +1,7 @@
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'REMOVE_SNACKBAR';
+export const OPEN_HEADER = 'OPEN_HEADER';
 
 export const enqueueSnackbar = (notification) => {
     const key = notification.options && notification.options.key;
@@ -24,3 +25,10 @@ export const removeSnackbar = key => ({
     type: REMOVE_SNACKBAR,
     key,
 });
+
+export const openHeader = event => {
+  return {
+    type: OPEN_HEADER,
+    event,
+  };
+};

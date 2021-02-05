@@ -1,19 +1,16 @@
 import { Button, Card, CardMedia, Grid, makeStyles, Typography } from '@material-ui/core';
 import { amber, blue, deepOrange, green, grey, purple, red } from '@material-ui/core/colors';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Ev from '../images/HomeEv.png';
 import Murb from '../images/Murb.png';
 
 const useStyles = makeStyles({
-  startButton: {
-    height: 100,
-    width: 200,
-    background: blue[600],
-    boxShadow: blue[600],
-  },
+  
 });
-export default function Home() {
+export default function Home(props) {
   const classes = useStyles();
+
   return (
     <React.Fragment>
       <Grid container direction="row">
@@ -32,7 +29,7 @@ export default function Home() {
 
             <br /><br />
             <Grid xs="5">
-              <Button onClick={} className={classes.startButton}>Get Started</Button>
+              {props.startButton()}           
             </Grid>
           </Grid>
         </Grid>

@@ -1,7 +1,8 @@
-import { ENQUEUE_SNACKBAR, CLOSE_SNACKBAR, REMOVE_SNACKBAR } from './actions';
+import { ENQUEUE_SNACKBAR, CLOSE_SNACKBAR, REMOVE_SNACKBAR, OPEN_HEADER } from './actions';
 
 const defaultState = {
   notifications: [],
+  header: false,
 };
 
 export default (state = defaultState, action) => {
@@ -34,6 +35,12 @@ export default (state = defaultState, action) => {
         notifications: state.notifications.filter(
           notification => notification.key !== action.key,
         ),
+      };
+    
+    case OPEN_HEADER:
+      return {
+        ...state,
+        header: true,
       };
 
     default:

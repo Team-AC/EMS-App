@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import React from 'react';
 import { useState } from 'react';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 
 export default (props) => {
 
@@ -25,7 +26,7 @@ export default (props) => {
 
   const classes = useStyles();
   const drawerOpen = props.open;
-  const [open, setOpen] = useState();
+  const [open, setOpen] = useState(false);
   
   const handleOpen = () => {
     setOpen(!open);
@@ -41,12 +42,6 @@ export default (props) => {
     >
       <div className={classes.appBarSpacer} />
       <List >
-        <ListItem button component={Link} to="/">
-          <ListItemIcon>
-            <House />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
         <ListItem button onClick={handleOpen}>
           <ListItemIcon>
             <ThumbUpIcon />
@@ -90,7 +85,12 @@ export default (props) => {
         </ListItem>
 
         <Divider />
-        
+        <ListItem button component={Link} to="/Instructions">
+          <ListItemIcon>
+            <ChromeReaderModeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Instructions" />
+        </ListItem>
         <ListItem button component={Link} to="/About">
           <ListItemIcon>
             <Info />
