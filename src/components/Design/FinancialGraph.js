@@ -69,7 +69,7 @@ const FinancialGraph = (props) => {
       </div>
     )
   } else {
-    return (<Alert severity="error"> Cannot show Financial graph </Alert>);
+    return (<Alert severity="error"> Cannot show Financial graph (please generate data if you haven't done so) </Alert>);
   }
 }
 export default FinancialGraph;
