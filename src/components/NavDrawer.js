@@ -45,12 +45,6 @@ export default (props) => {
     >
       <div className={classes.appBarSpacer} />
       <List >
-        <ListItem button component={Link} to="/">
-          <ListItemIcon>
-            <House />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
 
         <ListItem button onClick={() => handleOpen(openDesign, setOpenDesign)}>
           <ListItemIcon>
@@ -112,6 +106,7 @@ export default (props) => {
         </Collapse>
 
         <Divider />
+
         <ListItem button component={Link} to="/Instructions">
           <ListItemIcon>
             <ChromeReaderModeIcon />
