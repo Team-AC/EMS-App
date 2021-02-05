@@ -10,7 +10,7 @@ import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
 import About from './components/About';
 import Simulation from './components/Simulation/Simulation';
-import Financial from './components/EMS/Financial';
+import Billing from './components/EMS/Billing';
 import Charger from './components/EMS/EV/Charger';
 import MurbEnergy from './components/EMS/MURB/MurbEnergy';
 import Instructions from './components/Instructions';
@@ -109,7 +109,7 @@ export default () => {
               <Route path="/MurbEnergy" component={MurbEnergy} />
               <Route path="/Charger" component={Charger} />
               <Route path="/Simulation" component={Simulation} />
-              <Route path="/Financial" component={Financial} />
+              <Route path="/Billing" component={Billing} />
               <Route path="/About" component={About} />
             </Switch>
           </Container>
