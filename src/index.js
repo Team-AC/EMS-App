@@ -7,15 +7,19 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import reducers from './redux/reducers';
+import { PersistGate } from 'redux-persist/integration/react'
+import configureStore from './redux/configureStore';
 import 'roboto-fontface';
 
-const store = createStore(combineReducers({ app: reducers }));
+const {store, persistor} = configureStore();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <SnackbarProvider>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
       </SnackbarProvider>
     </Provider>
   </React.StrictMode>,

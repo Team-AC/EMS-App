@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import React from 'react';
 import { useState } from 'react';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 
 export default (props) => {
 
@@ -25,9 +26,9 @@ export default (props) => {
 
   const classes = useStyles();
   const drawerOpen = props.open;
-  const [openEms, setOpenEms] = useState();
-  const [openDesign, setOpenDesign] = useState();
-  const [openSimulation, setOpenSimulation] = useState();
+  const [openEms, setOpenEms] = useState(false);
+  const [openDesign, setOpenDesign] = useState(false);
+  const [openSimulation, setOpenSimulation] = useState(false);
   
   const handleOpen = (open, setOpen) => {
     setOpen(!open);
@@ -111,7 +112,12 @@ export default (props) => {
         </Collapse>
 
         <Divider />
-        
+        <ListItem button component={Link} to="/Instructions">
+          <ListItemIcon>
+            <ChromeReaderModeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Instructions" />
+        </ListItem>
         <ListItem button component={Link} to="/About">
           <ListItemIcon>
             <Info />

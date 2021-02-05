@@ -23,6 +23,7 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "redux-persist": "^6.0.0",
     "roboto-fontface": "^0.10.0",
     "serve": "^11.3.2",
     "styled-components": "^5.2.1",

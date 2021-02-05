@@ -1,27 +1,30 @@
-import { Button, Container, CssBaseline, IconButton, makeStyles } from '@material-ui/core';
 import React from 'react';
+import { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { useState } from 'react';
 import './App.css';
+import { Button, Container, CssBaseline, IconButton, makeStyles } from '@material-ui/core';
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import MenuIcon from '@material-ui/icons/Menu';
 import Home from './components/Home';
 import NavDrawer from './components/NavDrawer';
 import Header from './components/Header';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/About';
 import Simulation from './components/Simulation/Simulation';
 import Financial from './components/EMS/Financial';
 import Charger from './components/EMS/EV/Charger';
 import MurbEnergy from './components/EMS/MURB/MurbEnergy';
-import { grey } from '@material-ui/core/colors';
-import { useDispatch } from 'react-redux';
+import Instructions from './components/Instructions';
+import { blue, grey } from '@material-ui/core/colors';
+import { connect, useDispatch, useSelector} from 'react-redux';
 import Notifier from './components/Notifier';
 import {
   enqueueSnackbar as enqueueSnackbarAction,
   closeSnackbar as closeSnackbarAction,
+  openHeader,
 } from './redux/actions';
 
 const drawerWidth = 280;
+const headerHeight = 64;
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -39,40 +42,70 @@ const useStyles = makeStyles((theme) => ({
   contentShift: {
     marginLeft: drawerWidth,
   },
+  topContainer: {
+    margin: 0,
+  },
+  topShift: {
+    marginTop: headerHeight,
+  },
+  startButton: {
+    height: 100,
+    width: 200,
+    background: blue[600],
+    boxShadow: blue[600],
+  },
   appBarSpacer: theme.mixins.toolbar,
-
 }));
 
 export default () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const enqueueSnackbar = (...args) => dispatch(enqueueSnackbarAction(...args));
-  const closeSnackbar = (...args) => dispatch(closeSnackbarAction(...args));
-  const [open, setOpen] = useState(false);
-
+  const [drawerOpen, setDrawerOpen] = useState();
+  const headerOpen = useSelector(store => store.header || false);
+ 
   const toggleDrawer = () => {
-    setOpen(!open);
+    setDrawerOpen(!drawerOpen);
   }
-
+  const openingHeader = () => {
+    dispatch(openHeader(true));
+  }
   const menu = () => {
-    return(
+    return (
       <IconButton color="inherit" onClick={toggleDrawer}>
         <MenuIcon />
       </IconButton>
     )
   }
+
+  const startButton = () => {
+    return(
+      <Button onClick={openingHeader} component={Link} to="/Instructions" className={classes.startButton}>Get Started</Button>
+    )
+  }
+  const header = () => {
+    if (!headerOpen) {
+      return null;
+    } else {
+      return (
+        <Header menu={menu} headerHeight={headerHeight} />
+      )
+    }
+  }
   return (
     <div className="App">
-      <Header menu={menu} />
       <Notifier />
-      
+
       <Router>
-        <NavDrawer open={open} drawerWidth={drawerWidth} />
-        <main className={clsx(classes.content, {[classes.contentShift]: open})}>
+        {header()}
+        <NavDrawer open={drawerOpen} drawerWidth={drawerWidth} />
+        <main className={clsx(classes.content, { [classes.contentShift]: drawerOpen })}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="xl" className={classes.container}>
             <Switch>
-              <Route exact path="/" component={Home}></Route>
+              <Route exact path="/" render={(props) => (
+                <Home {...props} startButton={startButton} />
+              )}></Route>
+              <Route path="/Instructions" component={Instructions} />
               <Route path="/MurbEnergy" component={MurbEnergy} />
               <Route path="/Charger" component={Charger} />
               <Route path="/Simulation" component={Simulation} />
