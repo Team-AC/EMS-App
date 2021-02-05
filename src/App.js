@@ -60,10 +60,8 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const enqueueSnackbar = (...args) => dispatch(enqueueSnackbarAction(...args));
-  const closeSnackbar = (...args) => dispatch(closeSnackbarAction(...args));
   const [drawerOpen, setDrawerOpen] = useState();
-  const headerOpen = useSelector(store => store.app.header || false);
+  const headerOpen = useSelector(store => store.header || false);
  
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
