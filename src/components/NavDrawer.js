@@ -4,11 +4,11 @@ import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, Expand
 import { Link } from "react-router-dom";
 import React from 'react';
 import { useState } from 'react';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import BuildIcon from '@material-ui/icons/Build';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import { useSelector } from 'react-redux';
 
 export default (props) => {
 
@@ -28,7 +28,7 @@ export default (props) => {
   }));
 
   const classes = useStyles();
-  const drawerOpen = props.open;
+  const drawerOpen = useSelector(store => store.drawer);
   const [openEms, setOpenEms] = useState(false);
   const [openDesign, setOpenDesign] = useState(false);
   const [openSimulation, setOpenSimulation] = useState(false);

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import './App.css';
-import { Button, Container, CssBaseline, IconButton, makeStyles } from '@material-ui/core';
+import { Button, Container, CssBaseline, Drawer, IconButton, makeStyles } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import MenuIcon from '@material-ui/icons/Menu';
 import Home from './components/Home';
@@ -15,12 +15,13 @@ import Charger from './components/EMS/EV/Charger';
 import MurbEnergy from './components/EMS/MURB/MurbEnergy';
 import Instructions from './components/Instructions';
 import { blue, grey } from '@material-ui/core/colors';
-import { connect, useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import Notifier from './components/Notifier';
 import {
   enqueueSnackbar as enqueueSnackbarAction,
   closeSnackbar as closeSnackbarAction,
   openHeader,
+  toggleDrawer,
 } from './redux/actions';
 
 const drawerWidth = 280;
@@ -60,18 +61,19 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [drawerOpen, setDrawerOpen] = useState();
+  const drawer = useSelector(store => store.drawer);
   const headerOpen = useSelector(store => store.header || false);
  
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
+  const drawerToggle = () => {
+    dispatch(toggleDrawer());
   }
   const openingHeader = () => {
     dispatch(openHeader(true));
   }
+
   const menu = () => {
     return (
-      <IconButton color="inherit" onClick={toggleDrawer}>
+      <IconButton color="inherit" onClick={drawerToggle}>
         <MenuIcon />
       </IconButton>
     )
@@ -97,8 +99,8 @@ export default () => {
 
       <Router>
         {header()}
-        <NavDrawer open={drawerOpen} drawerWidth={drawerWidth} />
-        <main className={clsx(classes.content, { [classes.contentShift]: drawerOpen })}>
+        <NavDrawer drawerWidth={drawerWidth} />
+        <main className={clsx(classes.content, { [classes.contentShift]: drawer })}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="xl" className={classes.container}>
             <Switch>

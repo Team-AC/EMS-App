@@ -1,8 +1,9 @@
-import { ENQUEUE_SNACKBAR, CLOSE_SNACKBAR, REMOVE_SNACKBAR, OPEN_HEADER } from './actions';
+import { ENQUEUE_SNACKBAR, CLOSE_SNACKBAR, REMOVE_SNACKBAR, OPEN_HEADER, TOGGLE_DRAWER } from './actions';
 
 const defaultState = {
   notifications: [],
   header: false,
+  drawer: false,
 };
 
 export default (state = defaultState, action) => {
@@ -42,6 +43,12 @@ export default (state = defaultState, action) => {
         ...state,
         header: true,
       };
+
+    case TOGGLE_DRAWER: 
+      return {
+        ...state,
+        drawer: !state.drawer,
+      }
 
     default:
       return state;
