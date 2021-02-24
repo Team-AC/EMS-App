@@ -23,6 +23,7 @@ import {
   openHeader,
   toggleDrawer,
 } from './redux/actions';
+import Financial from './components/Design/Financial';
 
 const drawerWidth = 280;
 const headerHeight = 64;
@@ -50,10 +51,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: headerHeight,
   },
   startButton: {
-    height: 100,
+    height: 50,
     width: 200,
-    background: blue[600],
-    boxShadow: blue[600],
   },
   appBarSpacer: theme.mixins.toolbar,
 }));
@@ -68,6 +67,7 @@ export default () => {
     dispatch(toggleDrawer());
   }
   const openingHeader = () => {
+    setDrawerOpen(true);
     dispatch(openHeader(true));
   }
 
@@ -81,7 +81,7 @@ export default () => {
 
   const startButton = () => {
     return(
-      <Button onClick={openingHeader} component={Link} to="/Instructions" className={classes.startButton}>Get Started</Button>
+      <Button variant="contained" color="primary" onClick={openingHeader} component={Link} to="/Instructions" className={classes.startButton}>Get Started</Button>
     )
   }
   const header = () => {
@@ -110,6 +110,7 @@ export default () => {
               <Route path="/Instructions" component={Instructions} />
               <Route path="/MurbEnergy" component={MurbEnergy} />
               <Route path="/Charger" component={Charger} />
+              <Route path="/Financial" component={Financial} />
               <Route path="/Simulation" component={Simulation} />
               <Route path="/Billing" component={Billing} />
               <Route path="/About" component={About} />
