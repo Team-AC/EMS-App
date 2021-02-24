@@ -67,7 +67,7 @@ export default () => {
     dispatch(toggleDrawer());
   }
   const openingHeader = () => {
-    setDrawerOpen(true);
+    drawerToggle();
     dispatch(openHeader(true));
   }
 
