@@ -32,13 +32,8 @@ export default function EvSimulationCard() {
     evLevel2ChargeRate: 10,
     evLevel3ChargeRate: 100,
     percentageOfEv: 0.01,
-    evSmallBatteryAverage: 50,
-    evMediumBatteryAverage: 100,
-    evLargeBatteryAverage: 150,
-    evSmallBatteryProbability: 0.15,
-    evMediumBatteryProbability: 0.75,
-    evLargeBatteryProbability: 0.10,
-    carFlow: 'medium'
+    evBatteryAverage: 100,
+    carFlow: 'high'
   })
   const [defaultParams] = useState(params)
   const [changeParamsOpen, setParamsOpen] = useState(false);
@@ -111,9 +106,7 @@ export default function EvSimulationCard() {
   const generateEvPower = () => {
     setGenerateDisabled(true);
     setParamsOpen(false);
-    axios.post(`/api/ev/generate/${dataInterval}`, null, {
-      params,
-    })
+    axios.post(`/api/ev/generate/${dataInterval}`, params)
       .then((res) => {
         setGenerating(true);
         // Implement snackbar
@@ -269,49 +262,9 @@ export default function EvSimulationCard() {
                   fullWidth
                 />
                 <TextField
-                  label="Percentage of EV's With a Small Battery Size"
-                  value={params.evSmallBatteryProbability}
-                  name="evSmallBatteryProbability"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Percentage of EV's With a Medium Battery Size"
-                  value={params.evMediumBatteryProbability}
-                  name="evMediumBatteryProbability"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Percentage of EV's With a Large Battery Size"
-                  value={params.evLargeBatteryProbability}
-                  name="evLargeBatteryProbability"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label='Definition of an average "Small" Battery (kWh)'
-                  value={params.evSmallBatteryAverage}
-                  name="evSmallBatteryAverage"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label='Definition of an average "Medium" Battery (kWh)'
-                  value={params.evMediumBatteryAverage}
-                  name="evMediumBatteryAverage"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label='Definition of an average "Large" Battery (kWh)'
-                  value={params.evLargeBatteryAverage}
-                  name="evLargeBatteryAverage"
+                  label="Average size of EV Battery"
+                  value={params.evBatteryAverage}
+                  name="evBatteryAverage"
                   onChange={handleParams}
                   style={{marginBottom: '30px'}}
                   fullWidth
