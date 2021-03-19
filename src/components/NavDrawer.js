@@ -106,7 +106,7 @@ export default (props) => {
             </ListItemIcon>
             <ListItemText primary="Energy Data for EV Chargers" />
           </ListItem>
-          <ListItem button >
+          <ListItem button component={Link} to="Bess">
             <ListItemIcon>
               <BatteryChargingFull />
             </ListItemIcon>

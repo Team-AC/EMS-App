@@ -1,7 +1,4 @@
 import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { withKnobs, boolean } from '@storybook/addon-knobs'
-import { generateProgrammingLanguageStats } from '@nivo/generators'
 import { ResponsivePie } from '@nivo/pie'
 import { Alert } from '@material-ui/lab'
 import { Typography } from '@material-ui/core'

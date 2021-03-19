@@ -24,6 +24,7 @@ import {
   toggleDrawer,
 } from './redux/actions';
 import Financial from './components/Design/Financial';
+import Bess from './components/EMS/BESS/Bess';
 
 const drawerWidth = 280;
 const headerHeight = 64;
@@ -110,6 +111,7 @@ export default () => {
               <Route path="/Instructions" component={Instructions} />
               <Route path="/MurbEnergy" component={MurbEnergy} />
               <Route path="/Charger" component={Charger} />
+              <Route path="/Bess" component={Bess} />
               <Route path="/Financial" component={Financial} />
               <Route path="/Simulation" component={Simulation} />
               <Route path="/Billing" component={Billing} />
