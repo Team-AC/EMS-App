@@ -3,7 +3,6 @@ import axios from 'axios';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import BessPie from './BessPie';
-import EvPie from './EvPie';
 
 export default function Bess() {
   const [dataInterval, setDataInterval] = useState('pastDay')
