@@ -47,7 +47,7 @@ export default class Billing extends React.Component {
 
       formattedData.push({
         ...element,
-        Cost: element.Cost ? element.Cost.toFixed(2): element.TotalCost.toFixed(2),
+        Cost: element.Cost.toFixed(2),
         TimeStamp: formattedDate
       })
     })

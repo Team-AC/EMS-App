@@ -110,7 +110,7 @@ export default (props) => {
             <ListItemIcon>
               <BatteryChargingFull />
             </ListItemIcon>
-            <ListItemText primary="Energy Data for BESS" />
+            <ListItemText primary="Energy Usage Data" />
           </ListItem>
           <ListItem button component={Link} to="Billing">
             <ListItemIcon>

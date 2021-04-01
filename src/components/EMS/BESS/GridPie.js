@@ -4,7 +4,7 @@ import { Alert } from '@material-ui/lab'
 import { Typography } from '@material-ui/core'
 
 const EvPie = (props) => {
-  if (props.data.length > 0) {
+  if (props.data.some(el => el.value > 0)) {
     return (
       <div style={{ height: "60vh" }}>
         <Typography variant="h5" style={{ textAlign: 'center', marginTop: 50 }}>
