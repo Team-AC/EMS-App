@@ -280,19 +280,12 @@ export default function Charger() {
   }
 
   const ChargingAvatar = (props) => {
-    if (props.status) {
-      return (
-        <Avatar className={classes.on}>
-          <Power />
-        </Avatar>
-      )
-    } else {
-      return (
-        <Avatar className={classes.off}>
-          <PowerOff />
-        </Avatar>
-      )
-    }
+    return (
+      <Avatar className={classes.on}>
+        <Power />
+      </Avatar>
+    )
+
   }
 
   const displayCards = () => {
@@ -382,29 +375,11 @@ export default function Charger() {
       spacing={3}
     >
       <Grid item xs={2}>
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar className={classes.on}>
-                <Power />
-              </Avatar>
-            }
-            title="Charger is IN USE"
-          />
-        </Card>
+
       </Grid>
 
       <Grid item xs={2}>
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar className={classes.off}>
-                <PowerOff />
-              </Avatar>
-            }
-            title="Charger is NOT IN USE"
-          />
-        </Card>
+
       </Grid>
 
       <Grid item xs={8}>
