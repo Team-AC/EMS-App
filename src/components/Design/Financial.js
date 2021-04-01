@@ -46,9 +46,51 @@ export default function Financial() {
 
   const [data, setData] = useState([])
 
-  const formatForGraph = ((dataArray) => {
-    return dataArray.map((data) => ({ y: data.lvl_2 + data.lvl_3, x: data.year }))
-  })
+  const formatForGraph = (dataArray) => {
+    const graphArray = [
+      {
+        id: "Maintenance and Capital Costs",
+        data: []
+      },
+      {
+        id: "Total Pricing without Surge",
+        data: []
+      },
+      {
+        id: "Total Pricing with Surge",
+        data: []
+      }
+    ];
+
+  
+    for (const data of dataArray) {
+      const {
+        year,
+        network_cost,
+        lvl_2_installation_cost,
+        lvl_3_installation_cost,
+        lvl_2_maintenance_cost,
+        lvl_3_maintenance_cost,
+        lvl_2_no_surge_cost,
+        lvl_3_no_surge_cost,
+        lvl_2_before_surge,
+        lvl_3_before_surge,
+        lvl_2_surge,
+        lvl_3_surge
+      } = data;
+
+      const maintenanceAndCapitalCost = network_cost + lvl_2_installation_cost + lvl_3_installation_cost + lvl_2_maintenance_cost + lvl_3_maintenance_cost;
+      graphArray[0].data.push({ y: maintenanceAndCapitalCost, x: year});
+
+      const totalCostWithoutSurge = maintenanceAndCapitalCost + lvl_2_no_surge_cost + lvl_3_no_surge_cost;
+      graphArray[1].data.push({ y: totalCostWithoutSurge, x: year});
+
+      const totalCostWithSurge = maintenanceAndCapitalCost + lvl_2_before_surge + lvl_3_before_surge + lvl_2_surge + lvl_3_surge;
+      graphArray[2].data.push({ y: totalCostWithSurge, x: year});
+    }
+
+    return graphArray;
+  }
 
   const handleFinancialParams = e => {
     const { name, value } = e.target;
