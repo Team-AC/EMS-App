@@ -3,43 +3,52 @@ import axios from 'axios';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import BessPie from './BessPie';
+import EvPie from './GridPie';
 
 export default function Bess() {
   const [dataInterval, setDataInterval] = useState('pastDay')
-  const [data, setData] = useState([]);
+  const [bessData, setBessData] = useState([]);
+  const [gridData, setGridData] = useState([]);
+
   useEffect(() => {
     sendRequest(dataInterval);
-  }, [])
+  }, [dataInterval])
 
   const sendRequest = (e) => {
     axios.get(`/api/bess/energy`,)
       .then(res => {
         const interval = res.data[e]
-        const tempData = [
+        const tempBessData = [
           {
             "id": "Bess Ev Charging",
             "label": "Bess Ev Charging",
-            "value": interval.bess.ev,
+            "value": interval.bess.ev.toFixed(2),
           },
           {
             "id": "Bess Arbitrage",
             "label": "Bess Arbitrage",
-            "value": interval.bess.arbitrage,
+            "value": interval.bess.arbitrage.toFixed(2),
           },
           {
             "id": "Bess Load Shedding",
             "label": "Bess Load Shedding",
-            "value": interval.bess.load,
+            "value": interval.bess.load.toFixed(2),
           },
+        ]
+        const tempGridData = [
+          {
+            "id": "Bess Ev Charging",
+            "label": "Bess Ev Charging",
+            "value": interval.bess.ev.toFixed(2),
+          }, 
           {
             "id": "Grid Ev Charging",
             "label": "Grid Ev Charging",
-            "value": interval.grid.ev,
+            "value": interval.grid.ev.toFixed(2),
           },   
         ]
-        setData(
-          tempData
-        )
+        setBessData(tempBessData)
+        setGridData(tempGridData)
       })
   }
 
@@ -48,8 +57,11 @@ export default function Bess() {
   }
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <BessPie data={data} />
+      <Grid item xs={6}>
+        <BessPie data={bessData} />
+      </Grid>
+      <Grid item xs={6}>
+        <EvPie data={gridData} />
       </Grid>
       <Grid item xs={12}>
       <ButtonGroup color="primary" aria-label="outlined primary button group">

@@ -3,12 +3,12 @@ import { ResponsivePie } from '@nivo/pie'
 import { Alert } from '@material-ui/lab'
 import { Typography } from '@material-ui/core'
 
-const BessPie = (props) => {
+const EvPie = (props) => {
   if (props.data.length > 0) {
     return (
       <div style={{ height: "60vh" }}>
         <Typography variant="h5" style={{ textAlign: 'center', marginTop: 50 }}>
-          Output of BESS 
+          Ev Charging
         </Typography>
         <ResponsivePie
           data={props.data}
@@ -52,9 +52,9 @@ const BessPie = (props) => {
         />
       </div>
     )
-  }  else {
+  } else {
     return <Alert severity="error"> Cannot show Battery pie graph </Alert>;
   }
 }
 
-export default BessPie;
+export default EvPie;
