@@ -126,111 +126,97 @@ export default function Charger() {
   }
 
   useEffect(() => {
-    calcEVPower(aggregatedData);
+    changeEVPower(aggregatedData);
     displayCards();
   }, [aggregatedData])
 
-  // calculate power consumed 
-  const calcEVPower = (data) => {
+  // set data to be used for graphs 
+  const changeEVPower = (data) => {
     // split the data into level 2 chargers and level 3 chargers
     const Lv2Charger = data.filter(element => element.EvChargerType === 2);
     const Lv3Charger = data.filter(element => element.EvChargerType === 3);
-    let power2 = 0, power3 = 0;
-    let evTotal2 = 0, evTotal3 = 0;
-    let avgPower2 = 0, avgPower3 = 0;
-    let cost2 = 0, cost3 = 0;
-    let chargeTime2 = 0, chargeTime3 = 0;
-    let avgChargeTime2 = 0, avgChargeTime3 = 0;
-    let ticks2 = [], ticks3 = [];
-    let powerData2 = [], powerData3 = [];
-    let chargeData2 = [], chargeData3 = [];
-    let costData2 = [], costData3 = [];
-    let vehicleData2 = [], vehicleData3 = [];
 
-    for (let i = 0; i < numberOfLv2; i++) {
-      ticks2 = [];
-      powerData2 = [];
-      chargeData2 = [];
-      costData2 = [];
-      vehicleData2 = [];
+    for (let j = 0; j < numberOfLv2; j++) {
+      let ticks2 = [];
+      let powerData2 = [];
+      let chargeData2 = [];
+      let costData2 = [];
+      let vehicleData3 = [];
+      let evTotal2 = 0;
+      let power2 = 0;
+      let avgPower2 = 0;
+      let cost2 = 0;
+      let chargeTime2 = 0;
+      let avgChargeTime2 = 0;
+
       Lv2Charger.forEach(element => {
-        if (element.EvChargerNumber === i) {
-          cost2 = cost2 + element.Cost
-          if (currentInterval === 'pastDay') {
-            evTotal2++;
-            power2 = power2 + element.Power;
-            chargeTime2 = chargeTime2 + element.ChargeTime;
-          } else {
-            evTotal2 = evTotal2 + element.AggregatedAmount;
-            power2 = power2 + element.TotalPower;
-            chargeTime2 = chargeTime2 + element.TotalChargeTime;
-            ticks2.push(element.TimeStamp);
-            powerData2.push({ x: element.TimeStamp, y: element.TotalPower })
-            chargeData2.push({ TimeStamp: element.TimeStamp, ChargeTime: element.TotalChargeTime.toFixed(2)})
-            costData2.push({TimeStamp: element.TimeStamp, Cost: element.Cost.toFixed(2)})
-            vehicleData2.push({TimeStamp: element.TimeStamp, VehicleTotal: element.AggregatedAmount})
-          }
-        }
-      })
-      if (power2 != 0 || evTotal2 != 0) {
-        avgPower2 = (power2 / evTotal2).toFixed(2);
-        avgChargeTime2 = (chargeTime2 / evTotal2).toFixed(2);
-        generateTickValues(ticks2);
-      }
-      handleUpdate(i, power2.toFixed(2), setTotalPower2);
-      handleUpdate(i, evTotal2, setNumberOfUsesLv2);
-      handleUpdate(i, avgPower2, setAvgPowerPerEV2);
-      handleUpdate(i, cost2.toFixed(2), setTotalCost2);
-      handleUpdate(i, chargeTime2.toFixed(2), setUsageTime2);
-      handleUpdate(i, avgChargeTime2, setAvgUsageTime2);
-      handleUpdate(i, ticks2, setTickValues2);
-      handleUpdate(i, powerData2, setPowerData2);
-      handleUpdate(i, chargeData2, setChargeData2);
-      handleUpdate(i, costData2, setCostData2);
-      handleUpdate(i, vehicleData2, setVehicleData2);
-    }
+        if (element.EvChargerNumber === j) {
+          power2 = power2 + element.TotalPower
+          evTotal2 = evTotal2 + element.AggregatedAmount
+          avgPower2 = avgPower2 + element.AveragePowerPerEv
+          cost2 = cost2 + element.TotalPower
+          chargeTime2 = chargeTime2 + element.TotalChargeTime
+          avgChargeTime2 = avgChargeTime2 + element.AverageChargeTimePerEv
+          ticks2.push(element.TimeStamp)
+          powerData2.push({ x: element.TimeStamp, y: element.TotalPower })
+          chargeData2.push({ TimeStamp: element.TimeStamp, ChargeTime: element.TotalChargeTime.toFixed(2) })
+          costData2.push({ TimeStamp: element.TimeStamp, Cost: element.Cost.toFixed(2) })
+          vehicleData2.push({ TimeStamp: element.TimeStamp, VehicleTotal: element.AggregatedAmount })
 
-    for (let i = 0; i < numberOfLv3; i++) {
-      ticks3 = [];
-      powerData3 = [];
-      chargeData3 = [];
-      costData3 = [];
-      vehicleData2 = [];
-      Lv3Charger.forEach(element => {
-        if (element.EvChargerNumber === i) {
-          cost3 = cost3 + element.Cost;
-          if (currentInterval === 'pastDay') {
-            power3 = power3 + element.Power;
-            chargeTime3 = chargeTime3 + element.ChargeTime;
-            evTotal3++;
-          } else {
-            evTotal3 = evTotal3 + element.AggregatedAmount;
-            power3 = power3 + element.TotalPower;
-            chargeTime3 = chargeTime3 + element.TotalChargeTime;
-            ticks3.push(element.TimeStamp);
-            powerData3.push({ x: element.TimeStamp, y: element.TotalPower })
-            chargeData3.push({ TimeStamp: element.TimeStamp, ChargeTime: element.TotalChargeTime.toFixed(2)})
-            costData3.push({TimeStamp: element.TimeStamp, Cost: element.Cost.toFixed(2)})
-            vehicleData3.push({TimeStamp: element.TimeStamp, VehicleTotal: element.AggregatedAmount})
-          }
         }
       })
-      if (power3 != 0 || evTotal3 != 0) {
-        avgPower3 = (power3 / evTotal3).toFixed(2);
-        avgChargeTime3 = (chargeTime3 / evTotal3).toFixed(2);
-        generateTickValues(ticks3);
-      }
-      handleUpdate(i, power3.toFixed(2), setTotalPower3);
-      handleUpdate(i, evTotal3, setNumberOfUsesLv3);
-      handleUpdate(i, avgPower3, setAvgPowerPerEV3);
-      handleUpdate(i, cost3.toFixed(2), setTotalCost3);
-      handleUpdate(i, chargeTime3.toFixed(2), setUsageTime3);
-      handleUpdate(i, avgChargeTime3, setAvgUsageTime3);
-      handleUpdate(i, ticks3, setTickValues3);
-      handleUpdate(i, powerData3, setPowerData3);
-      handleUpdate(i, chargeData3, setChargeData3);
-      handleUpdate(i, costData3, setCostData3);
-      handleUpdate(i, vehicleData3, setVehicleData3);
+      handleUpdate(j, power2.toFixed(2), setTotalPower2);
+      handleUpdate(j, evTotal2, setNumberOfUsesLv2);
+      handleUpdate(j, avgPower2.toFixed(2), setAvgPowerPerEV2);
+      handleUpdate(j, cost2.toFixed(2), setTotalCost2);
+      handleUpdate(j, chargeTime2.toFixed(2), setUsageTime2);
+      handleUpdate(j, avgChargeTime2.toFixed(2), setAvgUsageTime2);
+      handleUpdate(j, generateTickValues(ticks2), setTickValues2)
+      handleUpdate(j, powerData2, setPowerData2);
+      handleUpdate(j, chargeData2, setChargeData2);
+      handleUpdate(j, costData2, setCostData2);
+      handleUpdate(j, vehicleData2, setVehicleData2);
+    }
+    for (let j = 0; j < numberOfLv3; j++) {
+      let ticks3 = [];
+      let powerData3 = [];
+      let chargeData3 = [];
+      let costData3 = [];
+      let vehicleData3 = [];
+      let evTotal3 = 0;
+      let power3 = 0;
+      let avgPower3 = 0;
+      let cost3 = 0;
+      let chargeTime3 = 0;
+      let avgChargeTime3 = 0;
+
+      Lv3Charger.forEach(element => {
+        if (element.EvChargerNumber === j) {
+          power3 = power3 + element.TotalPower
+          evTotal3 = evTotal3 + element.AggregatedAmount
+          avgPower3 = avgPower3 + element.AveragePowerPerEv
+          cost3 = cost3 + element.TotalPower
+          chargeTime3 = chargeTime3 + element.TotalChargeTime
+          avgChargeTime3 = avgChargeTime3 + element.AverageChargeTimePerEv
+          ticks3.push(element.TimeStamp)
+          powerData3.push({ x: element.TimeStamp, y: element.TotalPower })
+          chargeData3.push({ TimeStamp: element.TimeStamp, ChargeTime: element.TotalChargeTime.toFixed(2) })
+          costData3.push({ TimeStamp: element.TimeStamp, Cost: element.Cost.toFixed(2) })
+          vehicleData3.push({ TimeStamp: element.TimeStamp, VehicleTotal: element.AggregatedAmount })
+
+        }
+      })
+      handleUpdate(j, power3.toFixed(2), setTotalPower3);
+      handleUpdate(j, evTotal3, setNumberOfUsesLv3);
+      handleUpdate(j, avgPower3.toFixed(2), setAvgPowerPerEV3);
+      handleUpdate(j, cost3.toFixed(2), setTotalCost3);
+      handleUpdate(j, chargeTime3.toFixed(2), setUsageTime3);
+      handleUpdate(j, avgChargeTime3.toFixed(2), setAvgUsageTime3);
+      handleUpdate(j, generateTickValues(ticks3), setTickValues3)
+      handleUpdate(j, powerData3, setPowerData3);
+      handleUpdate(j, chargeData3, setChargeData3);
+      handleUpdate(j, costData3, setCostData3);
+      handleUpdate(j, vehicleData3, setVehicleData3);
     }
   }
 
@@ -316,7 +302,7 @@ export default function Charger() {
       for (let i = 0; i < numberOfLv2; i++) {
         cards2.push(
           <Grid item xs={3} key={i}>
-            <Slide direction="left" in={true} style={{ transitionDelay: `${250*(i)}ms` }} mountOnEnter unmountOnExit>
+            <Slide direction="left" in={true} style={{ transitionDelay: `${250 * (i)}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[100]}
                 media={
@@ -353,7 +339,7 @@ export default function Charger() {
         }
         cards3.push(
           <Grid item xs={3} key={i}>
-            <Slide direction="left" in={true} style={{ transitionDelay: `${250*(i + numberOfLv2)}ms` }} mountOnEnter unmountOnExit>
+            <Slide direction="left" in={true} style={{ transitionDelay: `${250 * (i + numberOfLv2)}ms` }} mountOnEnter unmountOnExit>
               <ExpandedCard
                 headerColor={lightBlue[300]}
                 media={
@@ -385,7 +371,6 @@ export default function Charger() {
     }
     return [cards2, cards3];
   }
-
 
   const changeInterval = (event) => {
     setCurrentInterval(event.currentTarget.value);
@@ -421,7 +406,7 @@ export default function Charger() {
           />
         </Card>
       </Grid>
-      
+
       <Grid item xs={8}>
         <ButtonGroup color="primary" aria-label="outlined primary button group">
           <Button value='pastYear' onClick={changeInterval}>Past Year</Button>

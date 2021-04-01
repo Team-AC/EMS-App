@@ -42,8 +42,17 @@ export default function EvSimulationCard() {
     batteryPower: 100
   });
 
+  const [evPredictionMode, setEvPredictionMode] = useState('Balanced')
+
+  const [evPredictParams, setEvPredictParams] = useState({
+    WeightPastMonth: 0.4,
+    WeightPastYear: 0.3,
+    WeightPastWeek: 0.3
+  })
+
   const [defaultEvParams] = useState(evParams)
   const [defaultBessParams] = useState(bessParams);
+
   const [changeParamsOpen, setParamsOpen] = useState(false);
 
   const handleOpenParams = () => {
@@ -114,7 +123,7 @@ export default function EvSimulationCard() {
   const generateEvPower = () => {
     setGenerateDisabled(true);
     setParamsOpen(false);
-    axios.post(`/api/ev/generate/${dataInterval}`, { evParameters: evParams, bessParameters: bessParams })
+    axios.post(`/api/ev/generate/${dataInterval}`, { evParameters: evParams, bessParameters: bessParams, evPredictParameters: evPredictParams })
       .then((res) => {
         setGenerating(true);
         // Implement snackbar
@@ -187,6 +196,36 @@ export default function EvSimulationCard() {
 
   }
 
+  const handleEvPredictsParams = e => {
+    const formats = {
+      "Conservative": "Conservative",
+      "Balanced": "Balanced",
+      "Aggressive": "Aggressive"
+    }
+    
+    if (e.target.value === "Conservative") {
+      setEvPredictionMode("Conservative")
+      setEvPredictParams({
+        WeightPastMonth: 0.2,
+        WeightPastYear: 0.6,
+        WeightPastWeek: 0.2
+      })
+    } else if (e.target.value === "Aggressive") {
+      setEvPredictionMode("Aggressive")
+      setEvPredictParams({
+        WeightPastMonth: 0.2,
+        WeightPastYear: 0.2,
+        WeightPastWeek: 0.6
+      })
+    } else {
+      setEvPredictionMode("Balanced")
+      setEvPredictParams({
+        WeightPastMonth: 0.4,
+        WeightPastYear: 0.3,
+        WeightPastWeek: 0.3
+      })
+    }
+  }
   const resetParams = () => {
     setEvParams(defaultEvParams);
     setBessParams(defaultBessParams);
@@ -249,7 +288,7 @@ export default function EvSimulationCard() {
                 </DialogContentText>
                 <Grid container spacing={3}>
 
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <Card>
                       <Typography> EV Parameters </Typography>
                       <TextField
@@ -315,8 +354,8 @@ export default function EvSimulationCard() {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={6}>
-                  <Typography> BESS Parameters </Typography>
+                  <Grid item xs={4}>
+                    <Typography> BESS Parameters </Typography>
                     <Card>
                       <TextField
                         label="Battery size for BESS (kW)"
@@ -335,9 +374,26 @@ export default function EvSimulationCard() {
                       />
                     </Card>
                   </Grid>
+
+                  <Grid item xs={4}>
+                    <Typography> EV Prediction Mode </Typography>
+                    <Card>
+                      <FormControl fullWidth>
+                        <InputLabel>EV Prediction Mode</InputLabel>
+                        <Select
+                          value={evPredictionMode}
+                          name="EV Prediction Mode"
+                          onChange={handleEvPredictsParams}
+                        >
+                          <MenuItem value="Conservative">Conservative</MenuItem>
+                          <MenuItem value="Balanced">Balanced</MenuItem>
+                          <MenuItem value="Aggressive">Aggressive</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Card>
+
+                  </Grid>
                 </Grid>
-
-
 
               </DialogContent>
               <DialogActions>
