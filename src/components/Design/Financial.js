@@ -11,9 +11,15 @@ export default function Financial() {
     inflationRate: 0.02,
     arrivalFlowPercentageLevel2: 0.25,
     arrivalFlowPercentageLevel3: 0.75,
+    energyCostNoSurge: 0.085,
+    energyCostBeforeThreshold: 0.101,
+    energyCostPastThreshold: 0.118,
+    installationCostLvl2: 3000,
+    installationCostLvl3: 21000,
   });
 
   const [presentParams, setPresentParams] = useState({
+    kwCapRegularRate: 12000,
     averageChargePercentage: 0.4,
     averageBatterySize: 75,
     energyCost: 0.085,
@@ -23,6 +29,7 @@ export default function Financial() {
     maintenanceLevel3: 1500
   });
   const [futureParams, setFutureParams] = useState({
+    kwCapRegularRate: 15000,
     averageChargePercentage: 0.7,
     averageBatterySize: 150,
     energyCost: 1,
@@ -71,10 +78,7 @@ export default function Financial() {
 
   const sendRequest = () => {
     axios.post('/api/design/finance/', {
-      amountOfYears: financialParams.amountOfYears,
-      inflationRate: financialParams.inflationRate,
-      arrivalFlowPercentageLevel2: financialParams.arrivalFlowPercentageLevel2,
-      arrivalFlowPercentageLevel3: financialParams.arrivalFlowPercentageLevel3,
+      ...financialParams,
       present: presentParams,
       future: futureParams
     })
@@ -99,6 +103,16 @@ export default function Financial() {
           Set present parameters to be used in the simulation.
           <br></br>
         </Typography>
+
+        <TextField
+          label="Power cap of the regular rate (kW)"
+          value={presentParams.kwCapRegularRate}
+          name="kwCapRegularRate"
+          onChange={handlePresentParams}
+          style={{ marginBottom: '30px' }}
+          fullWidth
+        />
+
         <TextField
           label="Present Average Charge (%)"
           value={presentParams.averageChargePercentage}
@@ -170,6 +184,16 @@ export default function Financial() {
           Set future parameters to be used in the simulation.
           <br></br>
         </Typography>
+
+        <TextField
+          label="Power cap of the regular rate (kW)"
+          value={futureParams.kwCapRegularRate}
+          name="kwCapRegularRate"
+          onChange={handleFutureParams}
+          style={{ marginBottom: '30px' }}
+          fullWidth
+        />
+
         <TextField
           label="Future Average Charge (%)"
           value={futureParams.averageChargePercentage}
@@ -274,13 +298,46 @@ export default function Financial() {
             fullWidth
           />
           <TextField
-            label="How many EVs will use Level 3 Chargers?"
-            value={financialParams.arrivalFlowPercentageLevel3}
-            name="arrivalFlowPercentageLevel3"
+            label="How much does the non-surge energy cost?"
+            value={financialParams.energyCostNoSurge}
+            name="energyCostNoSurge"
             onChange={handleFinancialParams}
             style={{ marginBottom: '30px' }}
             fullWidth
           />
+          <TextField
+            label="How much does the energy cost before the threshold"
+            value={financialParams.energyCostBeforeThreshold}
+            name="energyCostBeforeThreshold"
+            onChange={handleFinancialParams}
+            style={{ marginBottom: '30px' }}
+            fullWidth
+          />
+          <TextField
+            label="How much does the energy cost past the threshold"
+            value={financialParams.energyCostPastThreshold}
+            name="energyCostPastThreshold"
+            onChange={handleFinancialParams}
+            style={{ marginBottom: '30px' }}
+            fullWidth
+          />
+          <TextField
+            label="How much does it cost to install level 2 chargers"
+            value={financialParams.installationCostLvl2}
+            name="installationCostLvl2"
+            onChange={handleFinancialParams}
+            style={{ marginBottom: '30px' }}
+            fullWidth
+          />
+          <TextField
+            label="How much does it cost to install level 3 chargers"
+            value={financialParams.installationCostLvl3}
+            name="installationCostLvl3"
+            onChange={handleFinancialParams}
+            style={{ marginBottom: '30px' }}
+            fullWidth
+          />
+          
 
           <Grid container spacing={3}>
             <Grid item xs={6}>
