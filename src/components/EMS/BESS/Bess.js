@@ -6,7 +6,7 @@ import BessPie from './BessPie';
 import EvPie from './GridPie';
 
 export default function Bess() {
-  const [dataInterval, setDataInterval] = useState('pastDay')
+  const [dataInterval, setDataInterval] = useState('pastWeek')
   const [bessData, setBessData] = useState([]);
   const [gridData, setGridData] = useState([]);
 
@@ -69,7 +69,6 @@ export default function Bess() {
           <Button value='past3Months' onClick={changeInterval}>Past 3 Months</Button>
           <Button value='pastMonth' onClick={changeInterval}>Past Month</Button>
           <Button value='pastWeek' onClick={changeInterval}>Past Week</Button>
-          <Button value='pastDay' onClick={changeInterval}>Past Day</Button>
         </ButtonGroup>
       </Grid>
     </Grid>
