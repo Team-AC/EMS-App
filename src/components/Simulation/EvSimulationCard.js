@@ -358,14 +358,14 @@ export default function EvSimulationCard() {
                     <Typography> BESS Parameters </Typography>
                     <Card>
                       <TextField
-                        label="Battery size for BESS (kW)"
+                        label="Battery size for BESS (kWh)"
                         value={bessParams.batteryCapacity}
                         name="batteryCapacity"
                         onChange={handleBessParams}
                         style={{ marginBottom: '30px' }}
                         fullWidth
                       /><TextField
-                        label="Power for BESS (kWh)"
+                        label="Power for BESS (kW)"
                         value={bessParams.batteryPower}
                         name="batteryPower"
                         onChange={handleBessParams}
