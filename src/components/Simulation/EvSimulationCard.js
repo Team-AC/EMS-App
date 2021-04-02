@@ -26,24 +26,36 @@ export default function EvSimulationCard() {
   const [count, setCount] = useState(0);
   const [realTimeStatus, setRealTimeStatus] = useState(false);
   const [generateConfig, setGenerateConfig] = useState({});
-  const [params, setParams] = useState({
+
+  const [evParams, setEvParams] = useState({
     numOfEvLevel2: 3,
     numOfEvLevel3: 3,
     evLevel2ChargeRate: 10,
     evLevel3ChargeRate: 100,
     percentageOfEv: 0.01,
-    evSmallBatteryAverage: 50,
-    evMediumBatteryAverage: 100,
-    evLargeBatteryAverage: 150,
-    evSmallBatteryProbability: 0.15,
-    evMediumBatteryProbability: 0.75,
-    evLargeBatteryProbability: 0.10,
-    carFlow: 'medium'
+    evBatteryAverage: 100,
+    carFlow: 'high'
   })
-  const [defaultParams] = useState(params)
+
+  const [bessParams, setBessParams] = useState({
+    batteryCapacity: 500,
+    batteryPower: 100
+  });
+
+  const [evPredictionMode, setEvPredictionMode] = useState('Balanced')
+
+  const [evPredictParams, setEvPredictParams] = useState({
+    WeightPastMonth: 0.4,
+    WeightPastYear: 0.3,
+    WeightPastWeek: 0.3
+  })
+
+  const [defaultEvParams] = useState(evParams)
+  const [defaultBessParams] = useState(bessParams);
+
   const [changeParamsOpen, setParamsOpen] = useState(false);
 
-  const handleOpenParams = () =>{
+  const handleOpenParams = () => {
     setParamsOpen(true);
   }
 
@@ -111,9 +123,7 @@ export default function EvSimulationCard() {
   const generateEvPower = () => {
     setGenerateDisabled(true);
     setParamsOpen(false);
-    axios.post(`/api/ev/generate/${dataInterval}`, null, {
-      params,
-    })
+    axios.post(`/api/ev/generate/${dataInterval}`, { evParameters: evParams, bessParameters: bessParams, evPredictParameters: evPredictParams })
       .then((res) => {
         setGenerating(true);
         // Implement snackbar
@@ -166,16 +176,60 @@ export default function EvSimulationCard() {
     }
   };
 
-  const handleParams = e => {
+  const handleEvParams = e => {
     const { name, value } = e.target;
 
-    setParams(prevState => ({
+    setEvParams(prevState => ({
       ...prevState,
       [name]: value
     }));
 
   }
 
+  const handleBessParams = e => {
+    const { name, value } = e.target;
+
+    setBessParams(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+
+  }
+
+  const handleEvPredictsParams = e => {
+    const formats = {
+      "Conservative": "Conservative",
+      "Balanced": "Balanced",
+      "Aggressive": "Aggressive"
+    }
+    
+    if (e.target.value === "Conservative") {
+      setEvPredictionMode("Conservative")
+      setEvPredictParams({
+        WeightPastMonth: 0.2,
+        WeightPastYear: 0.6,
+        WeightPastWeek: 0.2
+      })
+    } else if (e.target.value === "Aggressive") {
+      setEvPredictionMode("Aggressive")
+      setEvPredictParams({
+        WeightPastMonth: 0.2,
+        WeightPastYear: 0.2,
+        WeightPastWeek: 0.6
+      })
+    } else {
+      setEvPredictionMode("Balanced")
+      setEvPredictParams({
+        WeightPastMonth: 0.4,
+        WeightPastYear: 0.3,
+        WeightPastWeek: 0.3
+      })
+    }
+  }
+  const resetParams = () => {
+    setEvParams(defaultEvParams);
+    setBessParams(defaultBessParams);
+  }
   const RealTimeStatusVisual = () => (
     <Typography style={{ color: realTimeStatus ? green[500] : blue[500] }}>
       <b>{realTimeStatus ? 'Simulation Running' : "Not Running"}</b>
@@ -221,117 +275,129 @@ export default function EvSimulationCard() {
               </Select>
             </FormControl>
 
-            <Dialog open={changeParamsOpen} onClose={handleCloseParams} aria-labelledby="form-dialog-title">
+            <Dialog
+              maxWidth={'md'}
+              open={changeParamsOpen}
+              onClose={handleCloseParams}
+              aria-labelledby="form-dialog-title"
+            >
               <DialogTitle id="form-dialog-title">Simulate the EV Chargers and Their Car Flow</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   Set the parameters to be used for the simulation.
                 </DialogContentText>
+                <Grid container spacing={3}>
 
-                <TextField
-                  label="Number of Level 2 Chargers"
-                  name="numOfEvLevel2"
-                  value={params.numOfEvLevel2}
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Number of Level 3 Chargers"
-                  name="numOfEvLevel3"
-                  value={params.numOfEvLevel3}
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Charge Rate of Level 2 Chargers (kW)"
-                  value={params.evLevel2ChargeRate}
-                  name="evLevel2ChargeRate"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Charge Rate of Level 3 Chargers (kW)"
-                  value={params.evLevel3ChargeRate}
-                  name="evLevel3ChargeRate"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Percentage of Vehicles that are EVs (in local area)"
-                  value={params.percentageOfEv}
-                  name="percentageOfEv"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Percentage of EV's With a Small Battery Size"
-                  value={params.evSmallBatteryProbability}
-                  name="evSmallBatteryProbability"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Percentage of EV's With a Medium Battery Size"
-                  value={params.evMediumBatteryProbability}
-                  name="evMediumBatteryProbability"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label="Percentage of EV's With a Large Battery Size"
-                  value={params.evLargeBatteryProbability}
-                  name="evLargeBatteryProbability"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label='Definition of an average "Small" Battery (kWh)'
-                  value={params.evSmallBatteryAverage}
-                  name="evSmallBatteryAverage"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label='Definition of an average "Medium" Battery (kWh)'
-                  value={params.evMediumBatteryAverage}
-                  name="evMediumBatteryAverage"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <TextField
-                  label='Definition of an average "Large" Battery (kWh)'
-                  value={params.evLargeBatteryAverage}
-                  name="evLargeBatteryAverage"
-                  onChange={handleParams}
-                  style={{marginBottom: '30px'}}
-                  fullWidth
-                />
-                <FormControl fullWidth>
-                  <InputLabel>Car Flow (in local area)</InputLabel>
-                  <Select
-                    value={params.carFlow}
-                    name="carFlow"
-                    onChange={handleParams}
-                  >
-                    <MenuItem value="low">Low</MenuItem>
-                    <MenuItem value="medium">Medium</MenuItem>
-                    <MenuItem value="high">High</MenuItem>
-                  </Select>
-                </FormControl>
-                
+                  <Grid item xs={4}>
+                    <Card>
+                      <Typography> EV Parameters </Typography>
+                      <TextField
+                        label="Number of Level 2 Chargers"
+                        name="numOfEvLevel2"
+                        value={evParams.numOfEvLevel2}
+                        onChange={handleEvParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Number of Level 3 Chargers"
+                        name="numOfEvLevel3"
+                        value={evParams.numOfEvLevel3}
+                        onChange={handleEvParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Charge Rate of Level 2 Chargers (kW)"
+                        value={evParams.evLevel2ChargeRate}
+                        name="evLevel2ChargeRate"
+                        onChange={handleEvParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Charge Rate of Level 3 Chargers (kW)"
+                        value={evParams.evLevel3ChargeRate}
+                        name="evLevel3ChargeRate"
+                        onChange={handleEvParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Percentage of Vehicles that are EVs (in local area)"
+                        value={evParams.percentageOfEv}
+                        name="percentageOfEv"
+                        onChange={handleEvParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Average size of EV Battery"
+                        value={evParams.evBatteryAverage}
+                        name="evBatteryAverage"
+                        onChange={handleEvParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                    </Card>
+                    <FormControl fullWidth>
+                      <InputLabel>Car Flow (in local area)</InputLabel>
+                      <Select
+                        value={evParams.carFlow}
+                        name="carFlow"
+                        onChange={handleEvParams}
+                      >
+                        <MenuItem value="low">Low</MenuItem>
+                        <MenuItem value="medium">Medium</MenuItem>
+                        <MenuItem value="high">High</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    <Typography> BESS Parameters </Typography>
+                    <Card>
+                      <TextField
+                        label="Battery size for BESS (kWh)"
+                        value={bessParams.batteryCapacity}
+                        name="batteryCapacity"
+                        onChange={handleBessParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      /><TextField
+                        label="Power for BESS (kW)"
+                        value={bessParams.batteryPower}
+                        name="batteryPower"
+                        onChange={handleBessParams}
+                        style={{ marginBottom: '30px' }}
+                        fullWidth
+                      />
+                    </Card>
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    <Typography> EV Prediction Mode </Typography>
+                    <Card>
+                      <FormControl fullWidth>
+                        <InputLabel>EV Prediction Mode</InputLabel>
+                        <Select
+                          value={evPredictionMode}
+                          name="EV Prediction Mode"
+                          onChange={handleEvPredictsParams}
+                        >
+                          <MenuItem value="Conservative">Conservative</MenuItem>
+                          <MenuItem value="Balanced">Balanced</MenuItem>
+                          <MenuItem value="Aggressive">Aggressive</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Card>
+
+                  </Grid>
+                </Grid>
+
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setParams(defaultParams)} color="secondary">
+                <Button onClick={resetParams} color="secondary">
                   Reset Parameters
                 </Button>
                 <Button onClick={generateEvPower} color="primary">
@@ -340,7 +406,7 @@ export default function EvSimulationCard() {
               </DialogActions>
             </Dialog>
           </Grid>
-          
+
           <Grid item>
             <Button style={{ marginLeft: "25px" }}
               variant="contained"

@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, CardContent, Grid, Container } from '@materi
 import { compareAsc, format, formatISO, parse, parseISO, subMinutes } from 'date-fns';
 import Typography from '@material-ui/core/Typography';
 
-export default class Financial extends React.Component {
+export default class Billing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +47,7 @@ export default class Financial extends React.Component {
 
       formattedData.push({
         ...element,
-        Cost: element.Cost ? element.Cost.toFixed(2): element.TotalCost.toFixed(2),
+        Cost: element.Cost.toFixed(2),
         TimeStamp: formattedDate
       })
     })

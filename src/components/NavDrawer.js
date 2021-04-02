@@ -1,10 +1,14 @@
-import { Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
+import { Collapse, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { lightBlue } from '@material-ui/core/colors';
-import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, House, Inbox, Info, TouchAppOutlined } from '@material-ui/icons';
+import { AttachMoney, BarChart, BatteryChargingFull, Business, EvStation, ExpandLess, ExpandMore, House, Inbox, Info, InsertChartOutlined, TouchAppOutlined } from '@material-ui/icons';
 import { Link } from "react-router-dom";
 import React from 'react';
 import { useState } from 'react';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
+import BuildIcon from '@material-ui/icons/Build';
+import InsertChartIcon from '@material-ui/icons/InsertChart';
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import { useSelector } from 'react-redux';
 
 export default (props) => {
 
@@ -24,36 +28,72 @@ export default (props) => {
   }));
 
   const classes = useStyles();
-  const [open, setOpen] = useState();
+  const drawerOpen = useSelector(store => store.drawer);
+  const [openEms, setOpenEms] = useState(false);
+  const [openDesign, setOpenDesign] = useState(false);
+  const [openSimulation, setOpenSimulation] = useState(false);
 
-  const handleOpen = () => {
+  const handleOpen = (open, setOpen) => {
     setOpen(!open);
   }
+
   return (
-    <Drawer
+    <Drawer open={drawerOpen}
       className={classes.drawer}
       classes={{
         paper: classes.drawerPaper,
       }}
-      variant="permanent"
+      variant="persistent"
       PaperProps={{ elevation: 5 }}
     >
       <div className={classes.appBarSpacer} />
-      <List>
-        <ListItem button component={Link} to="/">
+      <List >
+        <ListItem button component={Link} to="/Instructions">
           <ListItemIcon>
-            <House />
+            <ChromeReaderModeIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText primary="Instructions" />
         </ListItem>
-        <ListItem button onClick={handleOpen}>
+        
+        <Divider />
+
+        <ListItem button onClick={() => handleOpen(openDesign, setOpenDesign)}>
           <ListItemIcon>
-            <ThumbUpIcon />
+            <BuildIcon />
+          </ListItemIcon>
+          <ListItemText primary="Design" />
+          {openDesign ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+
+        <Collapse in={openDesign} timeout="auto" unmountOnExit>
+          <ListItem button component={Link} to="Financial">
+            <ListItemIcon>
+              <LocalAtmIcon />
+            </ListItemIcon>
+            <ListItemText primary="Financial" />
+          </ListItem>
+        </Collapse>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/Simulation">
+          <ListItemIcon>
+            <TouchAppOutlined />
+          </ListItemIcon>
+          <ListItemText primary="Simulation" />
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button onClick={() => handleOpen(openEms, setOpenEms)}>
+          <ListItemIcon>
+            <InsertChartIcon />
           </ListItemIcon>
           <ListItemText primary="Energy Management System" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {openEms ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+
+        <Collapse in={openEms} timeout="auto" unmountOnExit>
           <ListItem button component={Link} to="MurbEnergy">
             <ListItemIcon>
               <Business />
@@ -66,26 +106,22 @@ export default (props) => {
             </ListItemIcon>
             <ListItemText primary="Energy Data for EV Chargers" />
           </ListItem>
-          <ListItem button >
+          <ListItem button component={Link} to="Bess">
             <ListItemIcon>
               <BatteryChargingFull />
             </ListItemIcon>
-            <ListItemText primary="Energy Data for BESS" />
+            <ListItemText primary="Energy Usage Data" />
           </ListItem>
-          <ListItem button component={Link} to="Financial">
+          <ListItem button component={Link} to="Billing">
             <ListItemIcon>
               <AttachMoney />
             </ListItemIcon>
             <ListItemText primary="Billing" />
           </ListItem>
-          
         </Collapse>
-        <ListItem button component={Link} to="/Simulation">
-            <ListItemIcon>
-              <TouchAppOutlined />
-            </ListItemIcon>
-            <ListItemText primary="Simulation" />
-          </ListItem>
+
+        <Divider />
+
         <ListItem button component={Link} to="/About">
           <ListItemIcon>
             <Info />
